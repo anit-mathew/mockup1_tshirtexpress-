@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TshirtXpress — Custom Printing, Done Right</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0F2349;
+      --navy-light: #1A3462;
+      --orange:     #FF6425;
+      --orange-dk:  #E5541A;
+      --slate:      #0F172A;
+      --muted:      #64748B;
+      --border:     #E2E8F0;
+      --bg-soft:    #F8FAFC;
+      --white:      #FFFFFF;
+      --green:      #10B981;
+      --radius:     12px;
+    }
+
+    body { font-family: 'Inter', sans-serif; color: var(--slate); background: var(--white); line-height: 1.6; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── ANNOUNCEMENT ── */
+    .announcement {
+      background: var(--orange);
+      color: white;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 0.825rem;
+      font-weight: 600;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 1.25rem; color: var(--navy); letter-spacing: -0.02em;
+    }
+    .logo-icon {
+      width: 36px; height: 36px; background: var(--navy); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 20px; height: 20px; fill: var(--orange); }
+    .nav-logo .accent { color: var(--orange); }
+    .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--muted); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--navy); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; }
+    .btn-ghost { background: transparent; color: var(--navy); border: 1.5px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--navy); background: var(--bg-soft); }
+    .btn-primary { background: var(--orange); color: var(--white); }
+    .btn-primary:hover { background: var(--orange-dk); }
+    .btn-lg { padding: 14px 28px; font-size: 1rem; border-radius: 10px; }
+
+    /* ── HERO ── */
+    .hero-section {
+      background: linear-gradient(135deg, var(--navy) 0%, #1A3462 100%);
+      overflow: hidden;
+    }
+    .hero {
+      max-width: 1280px; margin: 0 auto;
+      padding: 80px 48px 0;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: end;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,100,37,0.15); border: 1px solid rgba(255,100,37,0.3);
+      color: #FF9A70; font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 100px; margin-bottom: 24px;
+    }
+    .hero-eyebrow::before { content:''; width:6px; height:6px; background:var(--orange); border-radius:50%; }
+    .hero h1 {
+      font-size: clamp(2.4rem, 4vw, 3.4rem); font-weight: 900;
+      line-height: 1.08; letter-spacing: -0.03em;
+      color: white; margin-bottom: 20px;
+    }
+    .hero h1 em { font-style: normal; color: var(--orange); }
+    .hero p { font-size: 1.05rem; color: rgba(255,255,255,0.68); max-width: 460px; margin-bottom: 36px; line-height: 1.75; }
+    .hero-cta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 32px; }
+    .btn-hero-outline {
+      background: rgba(255,255,255,0.08); color: white;
+      border: 1.5px solid rgba(255,255,255,0.2); padding: 14px 28px;
+      border-radius: 10px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: all 0.2s;
+    }
+    .btn-hero-outline:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.4); }
+    .hero-checks { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+    .check-item { display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,0.55); font-size: 0.84rem; }
+    .check-item svg { width: 15px; height: 15px; stroke: var(--green); fill: none; flex-shrink: 0; }
+
+    /* Hero image panel */
+    .hero-image-panel {
+      position: relative;
+      border-radius: 20px 20px 0 0;
+      overflow: hidden;
+      height: 520px;
+    }
+    .hero-image-panel img {
+      width: 100%; height: 100%; object-fit: cover;
+      object-position: center top;
+    }
+    .hero-image-panel::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(15,35,73,0.5) 100%);
+    }
+
+    /* Floating cards over hero image */
+    .float-card {
+      position: absolute; z-index: 2;
+      background: white; border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .float-card-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .float-card .fc-title { font-size: 0.78rem; font-weight: 700; color: var(--navy); }
+    .float-card .fc-sub { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+    .float-card-1 { top: 28px; left: -20px; }
+    .float-card-2 { bottom: 64px; right: -20px; }
+    .float-card-3 { bottom: 64px; left: 20px; }
+
+    /* ── TRUST BAR ── */
+    .trust-bar { background: var(--navy); }
+    .trust-bar-inner { display: flex; align-items: stretch; max-width: 100%; }
+    .trust-item {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 18px 24px; border-right: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.875rem; font-weight: 500; color: rgba(255,255,255,0.85);
+    }
+    .trust-item:last-child { border-right: none; }
+    .trust-item svg { width: 18px; height: 18px; stroke: var(--orange); fill: none; flex-shrink: 0; }
+
+    /* ── LOGO STRIP ── */
+    .logo-strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 26px 48px; }
+    .logo-strip-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 40px; justify-content: center; }
+    .logo-strip p { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+    .logo-placeholder { font-size: 0.9rem; font-weight: 800; color: #CBD5E1; letter-spacing: -0.01em; }
+
+    /* ── SECTION ── */
+    .section { padding: 88px 48px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+    .section-title { font-size: clamp(1.75rem, 2.8vw, 2.5rem); font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; color: var(--navy); margin-bottom: 14px; }
+    .section-subtitle { font-size: 1.02rem; color: var(--muted); max-width: 540px; line-height: 1.72; margin-bottom: 52px; }
+
+    /* ── HOW IT WORKS ── */
+    .how-it-works { background: var(--bg-soft); }
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); position: relative; }
+    .steps-grid::before {
+      content: ''; position: absolute; top: 36px;
+      left: calc(12.5% + 18px); right: calc(12.5% + 18px);
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--border) 0, var(--border) 8px, transparent 8px, transparent 16px);
+    }
+    .step-card { padding: 0 24px 32px; text-align: center; }
+    .step-number {
+      width: 72px; height: 72px; background: white; border: 2px solid var(--border); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem; font-weight: 800; color: var(--navy);
+      margin: 0 auto 24px; position: relative; z-index: 1;
+    }
+    .step-card.active .step-number { background: var(--navy); color: white; border-color: var(--navy); }
+    .step-title { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .step-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── CATEGORIES ── */
+    .categories-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .cat-card {
+      border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+      cursor: pointer; transition: all 0.25s; background: var(--white);
+    }
+    .cat-card:hover { border-color: var(--navy); box-shadow: 0 8px 32px rgba(15,35,73,0.1); transform: translateY(-3px); }
+    .cat-card-img { height: 210px; overflow: hidden; position: relative; }
+    .cat-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .cat-card:hover .cat-card-img img { transform: scale(1.05); }
+    .cat-card-body { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .cat-name { font-size: 0.95rem; font-weight: 700; color: var(--navy); }
+    .cat-count { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+    .cat-arrow {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--bg-soft); display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .cat-card:hover .cat-arrow { background: var(--navy); }
+    .cat-arrow svg { width: 14px; height: 14px; stroke: var(--muted); fill: none; transition: stroke 0.2s; }
+    .cat-card:hover .cat-arrow svg { stroke: white; }
+
+    /* ── PRINT METHODS BANNER ── */
+    .print-methods {
+      background: var(--bg-soft);
+      padding: 0 48px 88px;
+    }
+    .print-methods-inner { max-width: 1200px; margin: 0 auto; }
+    .methods-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+      border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+    }
+    .method-card {
+      display: flex; flex-direction: column;
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .method-card:last-child { border-right: none; }
+    .method-img { height: 220px; overflow: hidden; }
+    .method-img img { width: 100%; height: 100%; object-fit: cover; }
+    .method-body { padding: 24px; flex: 1; }
+    .method-tag {
+      display: inline-block; background: rgba(255,100,37,0.1); color: var(--orange);
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 100px; margin-bottom: 10px;
+    }
+    .method-title { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .method-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── WHY US ── */
+    .why-us { background: var(--navy); }
+    .why-us .section-title { color: white; }
+    .why-us .section-subtitle { color: rgba(255,255,255,0.6); }
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; overflow: hidden; margin-bottom: 64px;
+    }
+    .stat-item { padding: 32px 24px; text-align: center; border-right: 1px solid rgba(255,255,255,0.08); }
+    .stat-item:last-child { border-right: none; }
+    .stat-number { font-size: 2rem; font-weight: 900; color: white; letter-spacing: -0.03em; line-height: 1; margin-bottom: 6px; }
+    .stat-number span { color: var(--orange); }
+    .stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.5); font-weight: 500; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .feature-card {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 28px; transition: all 0.25s;
+    }
+    .feature-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,100,37,0.3); }
+    .feature-icon { width: 48px; height: 48px; background: rgba(255,100,37,0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+    .feature-icon svg { width: 24px; height: 24px; stroke: var(--orange); fill: none; }
+    .feature-title { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 8px; }
+    .feature-desc { font-size: 0.875rem; color: rgba(255,255,255,0.52); line-height: 1.65; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .testimonial-card { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 28px; }
+    .stars { display: flex; gap: 3px; margin-bottom: 16px; }
+    .stars svg { width: 16px; height: 16px; fill: #F59E0B; }
+    .testimonial-text { font-size: 0.925rem; color: var(--slate); line-height: 1.72; margin-bottom: 20px; }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 42px; height: 42px; border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .author-name { font-size: 0.875rem; font-weight: 700; color: var(--navy); }
+    .author-meta { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── CTA BANNER ── */
+    .cta-wrap { padding: 0 48px; }
+    .cta-banner {
+      position: relative; overflow: hidden;
+      border-radius: 20px; padding: 0;
+      display: grid; grid-template-columns: 1fr 480px;
+      min-height: 340px;
+    }
+    .cta-content {
+      background: linear-gradient(135deg, var(--orange) 0%, var(--orange-dk) 100%);
+      padding: 60px 56px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .cta-content h2 { font-size: clamp(1.5rem, 2.4vw, 2rem); font-weight: 800; color: white; letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 10px; }
+    .cta-content p { font-size: 1rem; color: rgba(255,255,255,0.82); margin-bottom: 28px; }
+    .cta-actions { display: flex; gap: 12px; }
+    .btn-white { background: white; color: var(--orange); padding: 13px 26px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; border: none; font-family: inherit; transition: all 0.2s; }
+    .btn-white:hover { background: var(--bg-soft); }
+    .btn-outline-white { background: transparent; color: white; padding: 13px 26px; border-radius: 10px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: 1.5px solid rgba(255,255,255,0.45); font-family: inherit; transition: all 0.2s; }
+    .btn-outline-white:hover { border-color: white; background: rgba(255,255,255,0.1); }
+    .cta-image { overflow: hidden; }
+    .cta-image img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--slate); color: rgba(255,255,255,0.6); padding: 64px 48px 32px; margin-top: 88px; }
+    .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-brand p { font-size: 0.875rem; line-height: 1.7; max-width: 280px; margin-top: 14px; }
+    .footer-col h4 { font-size: 0.82rem; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 0.875rem; color: rgba(255,255,255,0.52); transition: color 0.2s; }
+    .footer-col ul a:hover { color: white; }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement">
+    🎉 <strong>Launch Offer:</strong> Get 20% off your first bulk order — code <strong>XPRESS20</strong> &nbsp;·&nbsp; Free shipping on orders over $150
+  </div>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+      </div>
+      Tshirt<span class="accent">Xpress</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Custom Order</a></li>
+      <li><a href="#">Bulk Pricing</a></li>
+      <li><a href="#">Gallery</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn btn-ghost">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Search
+      </button>
+      <button class="btn btn-ghost">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Cart (0)
+      </button>
+      <button class="btn btn-primary">Start Designing</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="hero">
+
+      <!-- Left: copy -->
+      <div class="hero-content">
+        <div class="hero-eyebrow">Trusted by 2,000+ businesses</div>
+        <h1>Custom T-Shirts<br/>Printed <em>Fast.</em><br/>Built to Last.</h1>
+        <p>Professional-quality custom printing for teams, events, and brands. Upload your design, pick your products, and get delivery in as little as 48 hours.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary btn-lg">
+            Start Your Order
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button class="btn-hero-outline">View Pricing</button>
+        </div>
+        <div class="hero-checks">
+          <div class="check-item"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>No minimum order</div>
+          <div class="check-item"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>48-hr rush available</div>
+          <div class="check-item"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>100% satisfaction guarantee</div>
+        </div>
+      </div>
+
+      <!-- Right: hero image with floating cards -->
+      <div class="hero-image-panel">
+        <img
+          src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&w=900&q=85"
+          alt="Custom printed apparel"
+        />
+
+        <!-- Floating card: order status -->
+        <div class="float-card float-card-1">
+          <div class="float-card-icon" style="background:#EFF6FF;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <div class="fc-title">Order #4821 Approved</div>
+            <div class="fc-sub">Print proof signed off · Ready to ship</div>
+          </div>
+        </div>
+
+        <!-- Floating card: rating -->
+        <div class="float-card float-card-2">
+          <div style="display:flex;gap:2px;margin-right:4px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#F59E0B"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div>
+            <div class="fc-title">4.9 / 5 Rating</div>
+            <div class="fc-sub">From 1,200+ verified orders</div>
+          </div>
+        </div>
+
+        <!-- Floating card: delivery -->
+        <div class="float-card float-card-3">
+          <div class="float-card-icon" style="background:#F0FDF4;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div>
+            <div class="fc-title">Ships in 48 hrs</div>
+            <div class="fc-sub">Rush production available</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Trust Bar -->
+  <div class="trust-bar">
+    <div class="trust-bar-inner">
+      <div class="trust-item"><svg viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>48-Hour Rush Printing</div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>100% Quality Guarantee</div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Free Shipping Over $150</div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>No Minimum Order</div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Bulk Discounts Available</div>
+    </div>
+  </div>
+
+  <!-- Trusted By -->
+  <div class="logo-strip">
+    <div class="logo-strip-inner">
+      <p>Trusted by</p>
+      <div class="logo-placeholder">Nike Teams</div>
+      <div class="logo-placeholder">Eventbrite</div>
+      <div class="logo-placeholder">Red Cross</div>
+      <div class="logo-placeholder">Google EDU</div>
+      <div class="logo-placeholder">Adidas Campus</div>
+    </div>
+  </div>
+
+  <!-- How It Works -->
+  <section class="section how-it-works">
+    <div class="section-inner">
+      <div class="section-label">Simple Process</div>
+      <h2 class="section-title">Order in 4 Easy Steps</h2>
+      <p class="section-subtitle">From your idea to your door — we've made the process as smooth as possible so you can focus on what matters.</p>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-title">Choose Your Product</div>
+          <div class="step-desc">Browse tees, hoodies, polos, tote bags, caps, and more. Filter by material, weight, and colour.</div>
+        </div>
+        <div class="step-card active">
+          <div class="step-number">2</div>
+          <div class="step-title">Upload Your Design</div>
+          <div class="step-desc">Upload your artwork or use our free online designer. We accept PNG, SVG, and AI files.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-title">Review & Approve</div>
+          <div class="step-desc">We send a digital proof before printing. You approve before we touch ink to fabric.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <div class="step-title">Fast Delivery</div>
+          <div class="step-desc">Orders ship within 2–5 business days. Rush options available for same-week turnaround.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">Product Range</div>
+      <h2 class="section-title">Everything You Can Print On</h2>
+      <p class="section-subtitle">From corporate events to street merch — we stock the blanks, you bring the creativity.</p>
+
+      <div class="categories-grid">
+
+        <div class="cat-card">
+          <div class="cat-card-img">
+            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80" alt="T-Shirts" />
+          </div>
+          <div class="cat-card-body">
+            <div><div class="cat-name">T-Shirts</div><div class="cat-count">48 styles available</div></div>
+            <div class="cat-arrow"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-card-img">
+            <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=600&q=80" alt="Hoodies" />
+          </div>
+          <div class="cat-card-body">
+            <div><div class="cat-name">Hoodies & Sweats</div><div class="cat-count">22 styles available</div></div>
+            <div class="cat-arrow"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-card-img">
+            <img src="https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?auto=format&fit=crop&w=600&q=80" alt="Polo Shirts" />
+          </div>
+          <div class="cat-card-body">
+            <div><div class="cat-name">Polo Shirts</div><div class="cat-count">18 styles available</div></div>
+            <div class="cat-arrow"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-card-img">
+            <img src="https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&w=600&q=80" alt="Tote Bags" />
+          </div>
+          <div class="cat-card-body">
+            <div><div class="cat-name">Tote Bags</div><div class="cat-count">14 styles available</div></div>
+            <div class="cat-arrow"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-card-img">
+            <img src="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=600&q=80" alt="Caps" />
+          </div>
+          <div class="cat-card-body">
+            <div><div class="cat-name">Caps & Headwear</div><div class="cat-count">30 styles available</div></div>
+            <div class="cat-arrow"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-card-img">
+            <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&w=600&q=80" alt="Accessories" />
+          </div>
+          <div class="cat-card-body">
+            <div><div class="cat-name">Accessories & More</div><div class="cat-count">55+ items</div></div>
+            <div class="cat-arrow"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Print Methods -->
+  <div class="print-methods">
+    <div class="print-methods-inner">
+      <div class="section-label" style="margin-bottom:12px;">Print Technology</div>
+      <h2 class="section-title" style="margin-bottom:14px;">The Right Method for Every Job</h2>
+      <p class="section-subtitle">We don't use one-size-fits-all. We match the print technique to your fabric, design complexity, and quantity.</p>
+
+      <div class="methods-grid">
+        <div class="method-card">
+          <div class="method-img">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=700&q=80" alt="Screen Printing" />
+          </div>
+          <div class="method-body">
+            <div class="method-tag">Best for bulk</div>
+            <div class="method-title">Screen Printing</div>
+            <div class="method-desc">Durable, vibrant, and cost-effective at scale. Ideal for simple designs and orders of 12+.</div>
+          </div>
+        </div>
+        <div class="method-card">
+          <div class="method-img">
+            <img src="https://images.unsplash.com/photo-1561069934-eee225952461?auto=format&fit=crop&w=700&q=80" alt="DTG Printing" />
+          </div>
+          <div class="method-body">
+            <div class="method-tag">Best for detail</div>
+            <div class="method-title">Direct-to-Garment (DTG)</div>
+            <div class="method-desc">Photo-realistic prints with unlimited colours. No minimums — perfect for small runs and complex artwork.</div>
+          </div>
+        </div>
+        <div class="method-card">
+          <div class="method-img">
+            <img src="https://images.unsplash.com/photo-1604671801908-6f0c6a092c05?auto=format&fit=crop&w=700&q=80" alt="Embroidery" />
+          </div>
+          <div class="method-body">
+            <div class="method-tag">Best for premium</div>
+            <div class="method-title">Embroidery</div>
+            <div class="method-desc">Raised, textured stitching that adds a premium feel. Perfect for logos on polos, caps, and jackets.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why Us -->
+  <section class="section why-us">
+    <div class="section-inner">
+      <div class="stats-row">
+        <div class="stat-item"><div class="stat-number">2<span>K+</span></div><div class="stat-label">Happy Clients</div></div>
+        <div class="stat-item"><div class="stat-number">50<span>K+</span></div><div class="stat-label">Items Printed</div></div>
+        <div class="stat-item"><div class="stat-number">48<span>hr</span></div><div class="stat-label">Rush Turnaround</div></div>
+        <div class="stat-item"><div class="stat-number">4.9<span>★</span></div><div class="stat-label">Average Rating</div></div>
+      </div>
+
+      <div class="section-label">Why TshirtXpress</div>
+      <h2 class="section-title">We Print. You Shine.</h2>
+      <p class="section-subtitle">We're not a faceless print platform. We're a team that cares about your brand looking exactly right — every single time.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="feature-title">Pre-Print Proofing</div>
+          <div class="feature-desc">Every order gets a digital mockup proof before we touch ink to fabric. You sign off, we print. Zero guesswork.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div class="feature-title">48-Hour Rush</div>
+          <div class="feature-desc">Need it fast? We offer 48-hour rush production on most products. Perfect for last-minute events and launches.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <div class="feature-title">Volume Discounts</div>
+          <div class="feature-desc">The more you order, the more you save. Bulk pricing kicks in at 12+ units with savings up to 40% on large orders.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="feature-title">Premium Print Quality</div>
+          <div class="feature-desc">DTG, screen print, embroidery — we match the method to the material for prints that stay vivid wash after wash.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div class="feature-title">Dedicated Support</div>
+          <div class="feature-desc">Real humans, not chatbots. Our team responds within 2 hours on business days and can assist with design files.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><svg viewBox="0 0 24 24" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <div class="feature-title">Satisfaction Guarantee</div>
+          <div class="feature-desc">Not happy? We'll reprint or refund — no questions asked. We stand behind every item that leaves our facility.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">Customer Reviews</div>
+      <h2 class="section-title">What Our Clients Say</h2>
+      <p class="section-subtitle">From small startups to large corporates — they all trusted TshirtXpress to deliver.</p>
+
+      <div class="testimonials-grid">
+
+        <div class="testimonial-card">
+          <div class="stars">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testimonial-text">"Ordered 200 polos for our company retreat. The quality blew us away — every shirt was consistent, colours were spot-on, and they arrived a day early. We'll never go anywhere else."</p>
+          <div class="testimonial-author">
+            <div class="avatar">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80" alt="James K." />
+            </div>
+            <div>
+              <div class="author-name">James K.</div>
+              <div class="author-meta">Operations Manager, TechWave Inc.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="stars">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testimonial-text">"I needed custom hoodies for my marathon team in 4 days. They hit the 48-hour rush, quality was fantastic, and the support team was responsive every step of the way. Absolutely recommend."</p>
+          <div class="testimonial-author">
+            <div class="avatar">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80" alt="Sarah R." />
+            </div>
+            <div>
+              <div class="author-name">Sarah R.</div>
+              <div class="author-meta">Event Coordinator, RunCity</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="stars">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="testimonial-text">"As a small brand, I was nervous about print quality with a small run. The results looked exactly like my proof — crisp, vibrant, professional. My customers absolutely love them."</p>
+          <div class="testimonial-author">
+            <div class="avatar">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=80&q=80" alt="Maya L." />
+            </div>
+            <div>
+              <div class="author-name">Maya L.</div>
+              <div class="author-meta">Founder, Merch by Maya</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <div class="cta-wrap">
+    <div class="cta-banner">
+      <div class="cta-content">
+        <h2>Ready to Print Something Great?</h2>
+        <p>Join 2,000+ businesses that trust TshirtXpress for their custom apparel. No minimums, no hassle.</p>
+        <div class="cta-actions">
+          <button class="btn-white">Start Your Order</button>
+          <button class="btn-outline-white">Get a Quote</button>
+        </div>
+      </div>
+      <div class="cta-image">
+        <img
+          src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=700&q=85"
+          alt="Custom branded apparel"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="color:white;">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+          </div>
+          Tshirt<span class="accent">Xpress</span>
+        </div>
+        <p>Professional custom printing for teams, events, and brands. Quality you can wear, speed you can count on.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="#">T-Shirts</a></li>
+          <li><a href="#">Hoodies</a></li>
+          <li><a href="#">Polo Shirts</a></li>
+          <li><a href="#">Tote Bags</a></li>
+          <li><a href="#">Caps</a></li>
+          <li><a href="#">All Products</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">How It Works</a></li>
+          <li><a href="#">Bulk Pricing</a></li>
+          <li><a href="#">Gallery</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">File Guidelines</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Returns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 TshirtXpress. All rights reserved.</span>
+      <span style="display:flex;gap:24px;">
+        <a href="#" style="color:rgba(255,255,255,0.4);font-size:0.8rem;">Privacy Policy</a>
+        <a href="#" style="color:rgba(255,255,255,0.4);font-size:0.8rem;">Terms of Service</a>
+      </span>
+    </div>
+  </footer>
+
+</body>
+</html>
