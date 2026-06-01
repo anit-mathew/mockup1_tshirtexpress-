@@ -1435,6 +1435,11 @@ footer{background:#030820;color:rgba(255,255,255,.6);padding:64px 0 28px;}
             <input id="shop-search" type="text" placeholder="Search products…" oninput="applyFilters()" style="flex:1;border:none;outline:none;font-family:var(--sans);font-size:13px;color:var(--navy);background:transparent;">
           </div>
         </div>
+        <!-- Gender filter -->
+        <div class="filter-block">
+          <div class="sidebar-title" style="display:flex;justify-content:space-between;align-items:center;">Gender <button onclick="clearFilter('gender')" style="font-size:11px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:var(--sans);">Clear</button></div>
+          <div id="filter-genders"></div>
+        </div>
         <!-- Category filter (dynamic) -->
         <div class="filter-block">
           <div class="sidebar-title" style="display:flex;justify-content:space-between;align-items:center;">Category <button onclick="clearFilter('cat')" style="font-size:11px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:var(--sans);">Clear</button></div>
@@ -2189,10 +2194,31 @@ const P = SS_DATA.map(d => {
 // ── FILTER STATE ──
 let activeCats = new Set();
 let activeBrands = new Set();
+let activeGenders = new Set();
 let filteredP = [...P];
+
+function getGender(name){
+  const n = name.toLowerCase();
+  if(n.startsWith("women's") || n.startsWith("girls'")) return 'Women';
+  if(n.startsWith("men's") || n.startsWith("boys'")) return 'Men';
+  if(n.startsWith('youth') || n.startsWith("infant") || n.startsWith("toddler")) return 'Youth';
+  return 'Unisex';
+}
 
 // ── BUILD FILTER CHECKBOXES ──
 function buildFilters(){
+  // Genders
+  const genderOrder = ['Men','Women','Youth','Unisex'];
+  const genderCounts = {};
+  P.forEach(p=>{ const g=getGender(p.name); genderCounts[g]=(genderCounts[g]||0)+1; });
+  document.getElementById('filter-genders').innerHTML = genderOrder
+    .filter(g=>genderCounts[g])
+    .map(g=>`
+    <div class="fopt">
+      <input type="checkbox" id="gender-${g}" onchange="toggleGender('${g}',this.checked)">
+      <label for="gender-${g}" style="flex:1">${g}</label>
+      <span class="fc">${genderCounts[g]}</span>
+    </div>`).join('');
   // Categories
   const cats = [...new Set(P.map(p=>p.cat))].sort();
   const catCounts = {};
@@ -2223,19 +2249,26 @@ function toggleBrand(brand,checked){
   checked ? activeBrands.add(brand) : activeBrands.delete(brand);
   applyFilters();
 }
+function toggleGender(gender,checked){
+  checked ? activeGenders.add(gender) : activeGenders.delete(gender);
+  applyFilters();
+}
 function clearFilter(type){
   if(type==='cat'){
     activeCats.clear();
     document.querySelectorAll('#filter-cats input').forEach(i=>i.checked=false);
-  } else {
+  } else if(type==='brand'){
     activeBrands.clear();
     document.querySelectorAll('#filter-brands input').forEach(i=>i.checked=false);
+  } else if(type==='gender'){
+    activeGenders.clear();
+    document.querySelectorAll('#filter-genders input').forEach(i=>i.checked=false);
   }
   applyFilters();
 }
 function resetFilters(){
-  activeCats.clear(); activeBrands.clear();
-  document.querySelectorAll('#filter-cats input,#filter-brands input,#flt-new,#flt-eco').forEach(i=>i.checked=false);
+  activeCats.clear(); activeBrands.clear(); activeGenders.clear();
+  document.querySelectorAll('#filter-cats input,#filter-brands input,#filter-genders input,#flt-new,#flt-eco').forEach(i=>i.checked=false);
   document.getElementById('shop-search').value='';
   applyFilters();
 }
@@ -2246,6 +2279,7 @@ function applyFilters(){
   filteredP = P.filter(p=>{
     if(activeCats.size && !activeCats.has(p.cat)) return false;
     if(activeBrands.size && !activeBrands.has(p.brand)) return false;
+    if(activeGenders.size && !activeGenders.has(getGender(p.name))) return false;
     if(onlyNew && !p.isNew) return false;
     if(onlyEco && !p.eco) return false;
     if(q && !p.name.toLowerCase().includes(q) && !p.brand.toLowerCase().includes(q) && !p.style.toLowerCase().includes(q)) return false;
