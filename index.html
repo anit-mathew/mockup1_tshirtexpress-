@@ -1619,10 +1619,10 @@ footer{background:#030820;color:rgba(255,255,255,.6);padding:64px 0 28px;}
         </div>
         <div class="co-section">
           <h3>Shipping Method</h3>
-          <div class="ship-opt on"><input type="radio" name="ship" checked><div class="ship-opt-info"><strong>Standard Ground</strong><p>Jun 2–5, 2026</p></div><div class="ship-price">$6.99</div></div>
-          <div class="ship-opt"><input type="radio" name="ship"><div class="ship-opt-info"><strong>2-Day Air</strong><p>May 30, 2026</p></div><div class="ship-price">$18.99</div></div>
-          <div class="ship-opt"><input type="radio" name="ship"><div class="ship-opt-info"><strong>Overnight Express</strong><p>May 29, 2026</p></div><div class="ship-price">$34.99</div></div>
-          <div class="ship-opt"><input type="radio" name="ship"><div class="ship-opt-info"><strong>Free Shipping</strong><p>Orders over $50 · 5–7 days</p></div><div class="ship-price" style="color:var(--green)">FREE</div></div>
+          <div class="ship-opt on" onclick="selectShipping(this)"><input type="radio" name="ship" checked><div class="ship-opt-info"><strong>Standard Ground</strong><p>Jun 2–5, 2026</p></div><div class="ship-price">$6.99</div></div>
+          <div class="ship-opt" onclick="selectShipping(this)"><input type="radio" name="ship"><div class="ship-opt-info"><strong>2-Day Air</strong><p>May 30, 2026</p></div><div class="ship-price">$18.99</div></div>
+          <div class="ship-opt" onclick="selectShipping(this)"><input type="radio" name="ship"><div class="ship-opt-info"><strong>Overnight Express</strong><p>May 29, 2026</p></div><div class="ship-price">$34.99</div></div>
+          <div class="ship-opt" onclick="selectShipping(this)"><input type="radio" name="ship"><div class="ship-opt-info"><strong>Free Shipping</strong><p>Orders over $50 · 5–7 days</p></div><div class="ship-price" style="color:var(--green)">FREE</div></div>
         </div>
         <div class="co-section">
           <h3>Payment</h3>
@@ -1645,7 +1645,7 @@ footer{background:#030820;color:rgba(255,255,255,.6);padding:64px 0 28px;}
         <div id="co-mini-items"></div>
         <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--g200);">
           <div class="sum-row"><span>Subtotal</span><span id="co-sub">$0.00</span></div>
-          <div class="sum-row"><span>Shipping</span><span>$6.99</span></div>
+          <div class="sum-row"><span>Shipping</span><span id="co-shipping">$6.99</span></div>
           <div class="sum-row"><span>Tax</span><span id="co-tax">$0.00</span></div>
           <div class="sum-row total"><span>Total</span><span id="co-total">$0.00</span></div>
         </div>
@@ -2007,6 +2007,7 @@ footer{background:#030820;color:rgba(255,255,255,.6);padding:64px 0 28px;}
           <div class="cz-pb-row"><span>Garment</span><span id="czp-garment">$0.00</span></div>
           <div class="cz-pb-row"><span id="czp-print-label">Print (front)</span><span id="czp-print">$0.00</span></div>
           <div class="cz-pb-row"><span>Back print</span><span id="czp-back">—</span></div>
+          <div class="cz-pb-row" id="czp-design-fee-row" style="display:none;color:var(--blue);"><span id="czp-design-fee-label">Design edits (×0)</span><span id="czp-design-fee">+$0.00</span></div>
           <div class="cz-pb-total"><span>Total ×<span id="czp-qty">1</span></span><span id="czp-total">$0.00</span></div>
         </div>
 
@@ -2255,6 +2256,7 @@ function applyFilters(){
 
 let cart = [];
 let cur = P[0];
+let selectedShipping = { label: 'Standard Ground', cost: 6.99 };
 
 // ── NAV ──
 function nav(page){
@@ -2598,15 +2600,34 @@ function calcSummary(){
   const tax=sub*.08;const tot=sub+tax;
   ['cart-sub','co-sub'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='$'+sub.toFixed(2);});
   ['cart-tax','co-tax'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='$'+tax.toFixed(2);});
-  const ship=6.99;
+  const ship=selectedShipping.cost;
   ['cart-total'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='$'+tot.toFixed(2);});
   ['co-total','co-total-btn'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='$'+(sub+tax+ship).toFixed(2);});
+  const shipEl=document.getElementById('co-shipping');
+  if(shipEl) shipEl.textContent = ship===0 ? 'FREE' : '$'+ship.toFixed(2);
 }
 
 // ── CHECKOUT ──
 function renderCheckout(){
   const el=document.getElementById('co-mini-items');
   if(el)el.innerHTML=cart.map(it=>`<div class="mini-item"><div class="mini-img"><img src="${it.img}" alt="${it.name}"></div><div class="mini-info"><h5>${it.name}</h5><p>${it.color} · ${it.size} · ×${it.qty}</p></div><div class="mini-price">$${(it.price*it.qty).toFixed(2)}</div></div>`).join('');
+  calcSummary();
+}
+
+// ── SHIPPING SELECTION ──
+const SHIP_OPTIONS = [
+  { label: 'Standard Ground', cost: 6.99 },
+  { label: '2-Day Air',       cost: 18.99 },
+  { label: 'Overnight Express', cost: 34.99 },
+  { label: 'Free Shipping',   cost: 0 },
+];
+function selectShipping(el){
+  document.querySelectorAll('.ship-opt').forEach((opt,i)=>{
+    const isThis = opt===el;
+    opt.classList.toggle('on', isThis);
+    opt.querySelector('input[type=radio]').checked = isThis;
+    if(isThis) selectedShipping = SHIP_OPTIONS[i];
+  });
   calcSummary();
 }
 
@@ -2633,7 +2654,7 @@ function fmtDate(d){ return d.toLocaleDateString('en-US',{month:'short',day:'num
 function placeOrder(){
   const sub  = cart.reduce((a,i)=>a+i.price*i.qty, 0);
   const tax  = sub * 0.08;
-  const tot  = sub + tax + 6.99;
+  const tot  = sub + tax + selectedShipping.cost;
   const now  = new Date();
   const deliveryDate = new Date(now); deliveryDate.setDate(now.getDate() + 5 + Math.floor(Math.random()*3));
   const orderNum = genOrderNum();
@@ -2847,6 +2868,7 @@ let czProduct = null;
 let czColor = '';
 let czSize = '';
 let czSideData = {front: null, back: null}; // serialized JSON per side
+let czDesignAdditions = 0; // tracks number of design tool additions ($2 each)
 
 const PRINT_TYPES = [
   {id:'screen',  label:'Screen Printing',    desc:'Best for bulk orders, vivid colors, long-lasting.', price:8.00},
@@ -2888,6 +2910,7 @@ function openCustomizer(){
   czColor = document.querySelector('.clr-swatch.on')?.title || p.colors[0].n;
   czSize = document.querySelector('#pd-sizes .sz-chip.on')?.textContent || p.sizes[2] || p.sizes[0];
   czQty = +document.getElementById('pd-qty').value || 1;
+  czDesignAdditions = 0; // reset design fee counter for new session
 
   // Header subtitle
   document.getElementById('cz-product-subtitle').textContent = `${p.name} · ${czColor} · Size ${czSize}`;
@@ -3173,6 +3196,8 @@ function czAddImageToCanvas(dataUrl, name){
     czFabric.renderAll();
     czSaveHistory();
     czUpdateLayers();
+    czDesignAdditions++;
+    czUpdatePricing();
   }, {crossOrigin:'anonymous'});
 }
 
@@ -3227,6 +3252,8 @@ function czAddText(){
   czFabric.renderAll();
   czSaveHistory();
   czUpdateLayers();
+  czDesignAdditions++;
+  czUpdatePricing();
 }
 
 // Override the global czTextColor function name collision:
@@ -3265,6 +3292,8 @@ function czAddClipart(idx){
     czFabric.renderAll();
     czSaveHistory();
     czUpdateLayers();
+    czDesignAdditions++;
+    czUpdatePricing();
   });
 }
 
@@ -3407,13 +3436,25 @@ function czUpdatePricing(){
   const printFront = pt.price;
   const hasBack = czSideData.back || czSide==='back';
   const printBack = hasBack ? pt.price * 0.6 : 0;
-  const perItem = garment + printFront + printBack;
+  const designFee = czDesignAdditions * 2;
+  const perItem = garment + printFront + printBack + designFee;
   const total = perItem * czQty;
 
   document.getElementById('czp-garment').textContent = '$'+garment.toFixed(2);
   document.getElementById('czp-print-label').textContent = pt.label+' (front)';
   document.getElementById('czp-print').textContent = '+$'+printFront.toFixed(2);
   document.getElementById('czp-back').textContent = hasBack ? '+$'+printBack.toFixed(2) : '—';
+
+  // Design edits fee row — visible only when additions exist
+  const feeRow = document.getElementById('czp-design-fee-row');
+  if(czDesignAdditions > 0){
+    feeRow.style.display = '';
+    document.getElementById('czp-design-fee-label').textContent = 'Design edits (\xd7'+czDesignAdditions+')';
+    document.getElementById('czp-design-fee').textContent = '+$'+designFee.toFixed(2);
+  } else {
+    feeRow.style.display = 'none';
+  }
+
   document.getElementById('czp-qty').textContent = czQty;
   document.getElementById('czp-total').textContent = '$'+total.toFixed(2);
 }
@@ -3478,7 +3519,7 @@ function czSaveToCart(){
     nnRows.forEach(r => {
       const label = [r.name, r.num].filter(Boolean).join(' #');
       const itemName = `${czProduct.name} — ${label} (${r.size})`;
-      const itemPrice = czProduct.price + printPrice
+      const itemPrice = czProduct.price + printPrice + (czDesignAdditions * 2)
         + (r.name && r.num ? 6 : r.name ? 4 : r.num ? 3 : 0);
 
       // Don't merge — each person is a unique item
@@ -3504,7 +3545,7 @@ function czSaveToCart(){
   }
 
   // ── Regular custom item ──
-  const totalPrice = czProduct.price + printPrice;
+  const totalPrice = czProduct.price + printPrice + (czDesignAdditions * 2);
   const ex = cart.find(i=>i.pid===czProduct.id&&i.color===czColor&&i.size===czSize&&i.customized&&!i.nnRow);
   if(ex){ ex.qty += czQty; }
   else {
