@@ -520,6 +520,7 @@ footer{background:#030820;color:rgba(255,255,255,.6);padding:64px 0 28px;}
 .nn-apply-btn{width:100%;justify-content:center;margin-bottom:6px;font-size:13px;padding:11px 20px;}
 .nn-pricing{font-size:10px;color:var(--g400);text-align:center;line-height:1.6;}
 @keyframes czBounce{0%,80%,100%{transform:scale(0.6);opacity:.4;}40%{transform:scale(1);opacity:1;}}
+@keyframes catalogSpin{to{transform:rotate(360deg);}}
 @keyframes czSpin{to{transform:rotate(360deg);}}
 
 /* ══════════════════════════════════════════
@@ -1025,6 +1026,59 @@ footer{background:#030820;color:rgba(255,255,255,.6);padding:64px 0 28px;}
 .od-summary-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g400);margin-bottom:16px;}
 .od-summary-row{display:flex;justify-content:space-between;font-size:13px;color:var(--g600);margin-bottom:8px;}
 .od-summary-row.total{font-size:15px;font-weight:700;color:var(--navy);border-top:1px solid var(--g200);padding-top:12px;margin-top:4px;}
+
+/* ── ACTIVE FILTER TAGS ── */
+.active-filters-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 0 4px;}
+.active-filters-bar:empty{display:none;}
+.filter-tag{display:inline-flex;align-items:center;gap:5px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:20px;padding:4px 10px 4px 12px;font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;transition:all .15s;}
+.filter-tag:hover{background:#dbeafe;border-color:#93c5fd;}
+.filter-tag .ftx{font-size:14px;font-weight:700;line-height:1;opacity:.7;}
+.filter-tag:hover .ftx{opacity:1;}
+.filter-clear-all{font-size:12px;font-weight:600;color:var(--g400);cursor:pointer;padding:4px 8px;border-radius:6px;transition:color .15s;}
+.filter-clear-all:hover{color:var(--pink);}
+
+/* ── PAGINATION ── */
+.shop-pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:36px 0 8px;}
+.pg-btn{min-width:36px;height:36px;border:1.5px solid var(--g200);border-radius:8px;background:#fff;font-family:var(--sans);font-size:13px;font-weight:600;color:var(--g600);cursor:pointer;display:grid;place-items:center;transition:all .2s;padding:0 10px;}
+.pg-btn:hover{border-color:var(--blue);color:var(--blue);}
+.pg-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.pg-btn:disabled{opacity:.35;cursor:default;pointer-events:none;}
+.pg-ellipsis{font-size:13px;color:var(--g400);padding:0 2px;}
+
+/* ── INVENTORY GRID ── */
+.inv-section{margin-top:28px;}
+.inv-label{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.inv-label::after{content:'';flex:1;height:1px;background:var(--g200);}
+.inv-table{width:100%;border-collapse:collapse;border:1px solid var(--g200);border-radius:10px;overflow:hidden;font-size:12px;}
+.inv-table th{background:var(--navy);color:#fff;padding:8px 10px;text-align:center;font-weight:600;font-size:11px;letter-spacing:.5px;}
+.inv-table th:first-child{text-align:left;}
+.inv-table td{padding:7px 10px;text-align:center;border-bottom:1px solid var(--g100);color:var(--navy);}
+.inv-table td:first-child{text-align:left;font-weight:600;color:var(--g600);}
+.inv-table tr:last-child td{border-bottom:none;}
+.inv-table tr:nth-child(even){background:var(--g50);}
+.inv-available{color:var(--green);font-weight:600;}
+.inv-low{color:#f59e0b;font-weight:600;}
+.inv-out{color:var(--g400);}
+
+/* ── COMPANION / COMPARABLE STYLES ── */
+.pd-companion-section{padding:48px 0 64px;background:var(--g50);}
+.pd-companion-inner{display:grid;grid-template-columns:1fr 1fr;gap:48px;}
+.comp-title{font-family:var(--serif);font-size:24px;color:var(--navy);margin-bottom:24px;}
+.companion-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.companion-card{cursor:pointer;text-align:center;}
+.companion-card:hover .comp-thumb{border-color:var(--blue);}
+.comp-thumb{border:2px solid var(--g200);border-radius:12px;overflow:hidden;aspect-ratio:3/4;background:var(--g100);transition:border-color .2s;margin-bottom:8px;}
+.comp-thumb img{width:100%;height:100%;object-fit:cover;}
+.comp-style{font-size:11px;font-weight:700;color:var(--navy);}
+.comp-name{font-size:10px;color:var(--g500);line-height:1.3;margin-top:2px;}
+.comparable-empty{font-size:14px;color:var(--g400);padding:12px 0;}
+
+/* ── EXTRA SIDEBAR FILTERS ── */
+.filter-block-collapsible .filter-block-body{display:none;}
+.filter-block-collapsible.open .filter-block-body{display:block;}
+.sidebar-toggle{display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;}
+.sidebar-toggle-arrow{font-size:11px;color:var(--g400);transition:transform .2s;}
+.filter-block-collapsible.open .sidebar-toggle-arrow{transform:rotate(180deg);}
 </style>
 </head>
 <body>
@@ -1507,19 +1561,45 @@ footer{background:#030820;color:rgba(255,255,255,.6);padding:64px 0 28px;}
           <div class="fopt"><input type="checkbox" id="flt-new" onchange="applyFilters()"><label for="flt-new">New Arrivals</label></div>
           <div class="fopt"><input type="checkbox" id="flt-eco" onchange="applyFilters()"><label for="flt-eco">🌿 Eco / Sustainable</label></div>
         </div>
+        <!-- Sleeve Length filter -->
+        <div class="filter-block">
+          <div class="sidebar-title" style="display:flex;justify-content:space-between;align-items:center;">Sleeve Length <button onclick="clearFilter('sleeve')" style="font-size:11px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:var(--sans);">Clear</button></div>
+          <div id="filter-sleeves">
+            <div class="fopt"><input type="checkbox" class="flt-sleeve" value="Short Sleeve" onchange="applyFilters()"><label>Short Sleeve</label></div>
+            <div class="fopt"><input type="checkbox" class="flt-sleeve" value="Long Sleeve" onchange="applyFilters()"><label>Long Sleeve</label></div>
+            <div class="fopt"><input type="checkbox" class="flt-sleeve" value="Sleeveless" onchange="applyFilters()"><label>Sleeveless / Tank</label></div>
+          </div>
+        </div>
+        <!-- Style filter -->
+        <div class="filter-block">
+          <div class="sidebar-title" style="display:flex;justify-content:space-between;align-items:center;">Style <button onclick="clearFilter('style')" style="font-size:11px;color:var(--blue);background:none;border:none;cursor:pointer;font-family:var(--sans);">Clear</button></div>
+          <div id="filter-styles">
+            <div class="fopt"><input type="checkbox" class="flt-style" value="Polo" onchange="applyFilters()"><label>Polo</label></div>
+            <div class="fopt"><input type="checkbox" class="flt-style" value="Hoodie" onchange="applyFilters()"><label>Hoodie / Zip</label></div>
+            <div class="fopt"><input type="checkbox" class="flt-style" value="Crewneck" onchange="applyFilters()"><label>Crewneck</label></div>
+            <div class="fopt"><input type="checkbox" class="flt-style" value="Jacket" onchange="applyFilters()"><label>Jacket / Vest</label></div>
+            <div class="fopt"><input type="checkbox" class="flt-style" value="Shorts" onchange="applyFilters()"><label>Shorts</label></div>
+          </div>
+        </div>
         <button class="btn btn-outline btn-sm" onclick="resetFilters()" style="width:100%;justify-content:center;margin-top:4px;">Reset All Filters</button>
       </aside>
       <div>
+        <!-- Active filter tags -->
+        <div class="active-filters-bar" id="active-filters-bar"></div>
         <div class="shop-toolbar">
-          <span class="shop-toolbar-count">Showing <strong>48 products</strong></span>
+          <span class="shop-toolbar-count">Showing <strong id="shop-count-text">0 products</strong></span>
           <div style="display:flex;align-items:center;gap:10px;">
             <span style="font-size:13px;color:var(--g500)">Sort:</span>
-            <select class="shop-sort" style="padding:9px 14px;border:1.5px solid var(--g200);border-radius:8px;font-family:var(--sans);font-size:13px;outline:none;background:#fff;cursor:pointer;">
-              <option>Best Selling</option><option>Newest First</option><option>Price: Low to High</option><option>Price: High to Low</option>
+            <select class="shop-sort" id="shop-sort-select" onchange="applyFilters()" style="padding:9px 14px;border:1.5px solid var(--g200);border-radius:8px;font-family:var(--sans);font-size:13px;outline:none;background:#fff;cursor:pointer;">
+              <option value="best">Best Selling</option>
+              <option value="newest">Newest First</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
             </select>
           </div>
         </div>
         <div class="shop-grid" id="shop-grid"></div>
+        <div class="shop-pagination" id="shop-pagination"></div>
       </div>
     </div>
   </div>
@@ -1565,6 +1645,8 @@ footer{background:#030820;color:rgba(255,255,255,.6);padding:64px 0 28px;}
           <div class="var-label">Size <span id="pd-sz-lbl" style="font-weight:400;color:var(--g500)"></span></div>
           <div class="sz-swatches" id="pd-sizes"></div>
         </div>
+        <!-- Inventory grid by size -->
+        <div class="inv-section" id="pd-inv-section"></div>
         <div class="qty-row">
           <div class="qty-ctrl">
             <button onclick="chQty(-1)">−</button>
@@ -1590,11 +1672,28 @@ footer{background:#030820;color:rgba(255,255,255,.6);padding:64px 0 28px;}
       </div>
     </div>
   </div>
+  <!-- Comparable & Companion Styles -->
+  <section class="pd-companion-section">
+    <div class="container">
+      <div class="pd-companion-inner">
+        <!-- Comparable Styles -->
+        <div>
+          <h2 class="comp-title">Comparable Styles</h2>
+          <div id="pd-comparable-grid"></div>
+        </div>
+        <!-- Companion Styles -->
+        <div>
+          <h2 class="comp-title">Companion Styles</h2>
+          <div class="companion-grid" id="pd-companion-grid"></div>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- Related -->
-  <section style="background:var(--g50);padding:64px 0;">
+  <section style="background:#fff;padding:48px 0 64px;">
     <div class="container">
       <div class="section-eyebrow">You May Also Like</div>
-      <h2 class="section-title" style="margin-bottom:36px;">Related Products</h2>
+      <h2 class="section-title" style="margin-bottom:36px;">More From This Brand</h2>
       <div class="products-grid" id="related-grid"></div>
     </div>
   </section>
@@ -2083,8 +2182,8 @@ footer{background:#030820;color:rgba(255,255,255,.6);padding:64px 0 28px;}
 </div><!-- end page-customize -->
 
 <script>
-// ── SS ACTIVEWEAR PRODUCT DATA ──
-const SS_DATA = [{"id":8507,"pn":"10106","brand":"BELLA + CANVAS","style":"0990","name":"Women's FWD Fashion Bodysuit","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/8507_fm.jpg","isNew":false,"eco":true},{"id":6166,"pn":"36106","brand":"BELLA + CANVAS","style":"100B","name":"Infant Jersey One Piece","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/6166_fm.jpg","isNew":false,"eco":true},{"id":11600,"pn":"15706","brand":"BELLA + CANVAS","style":"1010","name":"Women's Micro Rib Baby Tee","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11600_fm.jpg","isNew":false,"eco":true},{"id":11552,"pn":"04706","brand":"BELLA + CANVAS","style":"1012","name":"Women's Micro Rib Spaghetti Strap Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11552_fm.jpg","isNew":false,"eco":true},{"id":11601,"pn":"15806","brand":"BELLA + CANVAS","style":"1013","name":"Women's Micro Rib Muscle Crop Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11601_fm.jpg","isNew":false,"eco":true},{"id":11553,"pn":"04006","brand":"BELLA + CANVAS","style":"1019","name":"Women's Micro Rib Racer Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11553_fm.jpg","isNew":false,"eco":true},{"id":979,"pn":"59606","brand":"BELLA + CANVAS","style":"1080","name":"Women's Baby Rib Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/979_fm.jpg","isNew":false,"eco":true},{"id":11239,"pn":"07606","brand":"BELLA + CANVAS","style":"1081","name":"Women's Micro Rib Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11239_fm.jpg","isNew":false,"eco":true},{"id":16577,"pn":"04860","brand":"Gildan","style":"18100","name":"Unisex Heavy Blend™ Pocket Sweatpants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/16577_fm.jpg","isNew":true,"eco":true},{"id":428,"pn":"23060","brand":"Gildan","style":"18200","name":"Unisex Heavy Blend™ Sweatpants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/428_fm.jpg","isNew":false,"eco":true},{"id":576,"pn":"33560","brand":"Gildan","style":"18200B","name":"Youth Heavy Blend™ Sweatpants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/576_fm.jpg","isNew":false,"eco":true},{"id":16583,"pn":"04960","brand":"Gildan","style":"18250","name":"Unisex Heavy Blend™ Joggers","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/16583_fm.jpg","isNew":true,"eco":true},{"id":1697,"pn":"21160","brand":"Gildan","style":"18400","name":"Unisex Heavy Blend™ Open-Bottom Sweatpants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/1697_fm.jpg","isNew":false,"eco":true},{"id":12450,"pn":"02560","brand":"Gildan","style":"19000","name":"Unisex Hammer™ Maxweight Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/12450_fm.jpg","isNew":false,"eco":false},{"id":12449,"pn":"02460","brand":"Gildan","style":"19500","name":"Unisex Hammer™ Maxweight Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/12449_fm.jpg","isNew":false,"eco":false},{"id":3897,"pn":"56918","brand":"Next Level","style":"1510","name":"Women's Ideal T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/3897_fm.jpg","isNew":false,"eco":true},{"id":7813,"pn":"00518","brand":"Next Level","style":"1530","name":"Women's Ideal Flow T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/7813_fm.jpg","isNew":false,"eco":false},{"id":3895,"pn":"56718","brand":"Next Level","style":"1533","name":"Women's Ideal Racerback Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/3895_fm.jpg","isNew":false,"eco":true},{"id":3898,"pn":"57218","brand":"Next Level","style":"1540","name":"Women's Ideal V-Neck T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/3898_fm.jpg","isNew":false,"eco":true},{"id":10101,"pn":"02718","brand":"Next Level","style":"1580","name":"Women's Ideal Crop Top","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/10101_fm.jpg","isNew":false,"eco":true},{"id":8320,"pn":"02618","brand":"Next Level","style":"2022","name":"Unisex Mock Twist Hoodie T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/8320_fm.jpg","isNew":false,"eco":false},{"id":4854,"pn":"38518","brand":"Next Level","style":"2050","name":"Men's Mock Twist Raglan T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/4854_fm.jpg","isNew":false,"eco":false},{"id":3206,"pn":"87318","brand":"Next Level","style":"3200","name":"Unisex Cotton V-Neck T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/3206_fm.jpg","isNew":false,"eco":true},{"id":11675,"pn":"00808","brand":"Comfort Colors","style":"1466","name":"Unisex Garment-Dyed Lightweight Fleece Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/11675_fm.jpg","isNew":false,"eco":true},{"id":11676,"pn":"00908","brand":"Comfort Colors","style":"1467","name":"Unisex Garment-Dyed Lightweight Fleece Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/11676_fm.jpg","isNew":false,"eco":true},{"id":12441,"pn":"00108","brand":"Comfort Colors","style":"1467Y","name":"Youth Garment-Dyed Lightweight Fleece Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/12441_fm.jpg","isNew":false,"eco":false},{"id":11677,"pn":"01008","brand":"Comfort Colors","style":"1468","name":"Unisex Garment-Dyed Lightweight Fleece Sweat Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/11677_fm.jpg","isNew":false,"eco":true},{"id":11678,"pn":"01108","brand":"Comfort Colors","style":"1469","name":"Unisex Garment-Dyed Lightweight Fleece Sweatpants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/11678_fm.jpg","isNew":false,"eco":true},{"id":9357,"pn":"23208","brand":"Comfort Colors","style":"1545","name":"Unisex Colorblast™ Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/9357_fm.jpg","isNew":false,"eco":true},{"id":1610,"pn":"23808","brand":"Comfort Colors","style":"1566","name":"Unisex Garment-Dyed Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/1610_fm.jpg","isNew":false,"eco":true},{"id":16616,"pn":"00408","brand":"Comfort Colors","style":"1566L","name":"Women's Garment-Dyed Mid-Length Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/16616_fm.jpg","isNew":true,"eco":true},{"id":11071,"pn":"03176","brand":"Independent Trading Co.","style":"AFX24CRP","name":"Women's Lightweight Crop Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/11071_fm.jpg","isNew":false,"eco":true},{"id":7788,"pn":"26576","brand":"Independent Trading Co.","style":"AFX64CRP","name":"Women's Lightweight Crop Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/7788_fm.jpg","isNew":false,"eco":true},{"id":6533,"pn":"19976","brand":"Independent Trading Co.","style":"AFX90UN","name":"Unisex Lightweight Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/6533_fm.jpg","isNew":false,"eco":true},{"id":1616,"pn":"81076","brand":"Independent Trading Co.","style":"AFX90UNZ","name":"Unisex Lightweight Full-Zip Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/1616_fm.jpg","isNew":false,"eco":true},{"id":7790,"pn":"12576","brand":"Independent Trading Co.","style":"EXP100PFZ","name":"Men's Puffer Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/7790_fm.jpg","isNew":false,"eco":true},{"id":16177,"pn":"00876","brand":"Independent Trading Co.","style":"EXP10PANT","name":"Men's Perform Fleece Pants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/16177_fm.jpg","isNew":false,"eco":false},{"id":7791,"pn":"12276","brand":"Independent Trading Co.","style":"EXP120PFV","name":"Men's Puffer Vest","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/7791_fm.jpg","isNew":false,"eco":true},{"id":16201,"pn":"04576","brand":"Independent Trading Co.","style":"EXP15WPQ","name":"Women's Perform Quarter-Zip Pullover","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/16201_fm.jpg","isNew":false,"eco":false},{"id":1766,"pn":"07484","brand":"Champion","style":"8187","name":"Unisex Cotton Gym Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/1766_fm.jpg","isNew":false,"eco":true},{"id":1754,"pn":"06084","brand":"Champion","style":"CC8C","name":"Unisex Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/1754_fm.jpg","isNew":false,"eco":true},{"id":15630,"pn":"10784","brand":"Champion","style":"CD100D","name":"Unisex Classic Jersey Dip Dye T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/15630_fm.jpg","isNew":false,"eco":false},{"id":15640,"pn":"10884","brand":"Champion","style":"CD400D","name":"Unisex Dip Dye Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/15640_fm.jpg","isNew":false,"eco":false},{"id":8254,"pn":"00584","brand":"Champion","style":"CD450","name":"Unisex Garment-Dyed Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/8254_fm.jpg","isNew":false,"eco":true},{"id":16691,"pn":"05184","brand":"Champion","style":"CH1000","name":"Unisex Jersey T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/16691_fm.jpg","isNew":true,"eco":false},{"id":16693,"pn":"05284","brand":"Champion","style":"CH1081","name":"Youth Jersey T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/16693_fm.jpg","isNew":true,"eco":false},{"id":16694,"pn":"05384","brand":"Champion","style":"CH1751","name":"Youth Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/16694_fm.jpg","isNew":true,"eco":false},{"id":222,"pn":"11000","brand":"Hanes","style":"054X","name":"Men's EcoSmart® Jersey Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/222_fm.jpg","isNew":false,"eco":true},{"id":1965,"pn":"31000","brand":"Hanes","style":"054Y","name":"Youth EcoSmart® Jersey Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/1965_fm.jpg","isNew":false,"eco":true},{"id":4435,"pn":"34200","brand":"Hanes","style":"42TB","name":"Perfect-T Triblend T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/4435_fm.jpg","isNew":false,"eco":true},{"id":4437,"pn":"34300","brand":"Hanes","style":"42VT","name":"Women's Perfect-T Triblend V-Neck T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/4437_fm.jpg","isNew":false,"eco":true},{"id":2561,"pn":"00100","brand":"Hanes","style":"4820","name":"Unisex Cool DRI® Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/2561_fm.jpg","isNew":false,"eco":true},{"id":4441,"pn":"34700","brand":"Hanes","style":"482L","name":"Unisex Cool DRI® Long Sleeve Performance T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/4441_fm.jpg","isNew":false,"eco":true},{"id":2563,"pn":"81400","brand":"Hanes","style":"4830","name":"Women's Cool DRI® Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/2563_fm.jpg","isNew":false,"eco":true},{"id":1710,"pn":"14079","brand":"Bayside","style":"1000","name":"Unisex USA-Made Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/1710_fm.jpg","isNew":false,"eco":false},{"id":1711,"pn":"54079","brand":"Bayside","style":"1050","name":"Women's USA-Made V-Neck Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/1711_fm.jpg","isNew":false,"eco":false},{"id":387,"pn":"21779","brand":"Bayside","style":"1102","name":"Unisex USA-Made Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/387_fm.jpg","isNew":false,"eco":false},{"id":4751,"pn":"10179","brand":"Bayside","style":"1115","name":"Youth USA-Made Full-Zip Fleece Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/4751_fm.jpg","isNew":false,"eco":false},{"id":4752,"pn":"10279","brand":"Bayside","style":"1120","name":"Men's USA-Made Full-Zip Fleece Vest","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/4752_fm.jpg","isNew":false,"eco":false},{"id":4492,"pn":"10079","brand":"Bayside","style":"1130","name":"Men's USA-Made Full-Zip Fleece Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/4492_fm.jpg","isNew":false,"eco":false},{"id":173,"pn":"08079","brand":"Bayside","style":"1701","name":"Unisex USA-Made 50/50 T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/173_fm.jpg","isNew":false,"eco":false},{"id":179,"pn":"08379","brand":"Bayside","style":"1715","name":"Men's USA-Made 50/50 Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/179_fm.jpg","isNew":false,"eco":false},{"id":12614,"pn":"11653","brand":"Adidas","style":"A1005","name":"Women's Ottoman Sleeveless Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/12614_fm.jpg","isNew":false,"eco":false},{"id":16031,"pn":"13453","brand":"Adidas","style":"A1008","name":"Women's Beyond Long Sleeve Loose Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/16031_fm.jpg","isNew":true,"eco":false},{"id":16032,"pn":"13553","brand":"Adidas","style":"A1009","name":"Women's Ultimate Quilted Full-Zip Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/16032_fm.jpg","isNew":true,"eco":false},{"id":12616,"pn":"11853","brand":"Adidas","style":"A1010","name":"Women's Performance Pocket Leggings","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/12616_fm.jpg","isNew":false,"eco":false},{"id":16034,"pn":"13753","brand":"Adidas","style":"A1012","name":"Women's Go-To Quarter-Zip Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/16034_fm.jpg","isNew":true,"eco":false},{"id":16438,"pn":"15753","brand":"Adidas","style":"A1014","name":"Women's Beyond Side-Snap Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/16438_fm.jpg","isNew":true,"eco":false},{"id":16475,"pn":"18953","brand":"Adidas","style":"A1016","name":"Women's Ultimate365 Tour Twistknit Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/16475_fm.jpg","isNew":true,"eco":false},{"id":11957,"pn":"15453","brand":"Adidas","style":"A2000","name":"Men's Golf 9\" Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/11957_fm.jpg","isNew":false,"eco":false},{"id":15460,"pn":"100E2","brand":"Under Armour","style":"1240539","name":"Ozsee Sackpack Drawstring Bag","cat":"Bags","img":"https://www.ssactivewear.com/Images/Style/15460_fm.jpg","isNew":false,"eco":false},{"id":14805,"pn":"101E2","brand":"Under Armour","style":"1300123","name":"Men's Hustle Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/14805_fm.jpg","isNew":false,"eco":false},{"id":14811,"pn":"102E2","brand":"Under Armour","style":"1300261","name":"Women's Hustle Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/14811_fm.jpg","isNew":false,"eco":false},{"id":14925,"pn":"103E2","brand":"Under Armour","style":"1302159","name":"Hustle Fleece Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/14925_fm.jpg","isNew":false,"eco":false},{"id":14906,"pn":"108E2","brand":"Under Armour","style":"1305784","name":"Women's Rival Fleece Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/14906_fm.jpg","isNew":false,"eco":false},{"id":15040,"pn":"113E2","brand":"Under Armour","style":"1343149","name":"Storm Elements Beanie","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/15040_fm.jpg","isNew":false,"eco":false},{"id":16181,"pn":"212E2","brand":"Under Armour","style":"1350097","name":"All Sport Backpack","cat":"Bags","img":"https://www.ssactivewear.com/Images/Style/16181_fm.jpg","isNew":true,"eco":false},{"id":14976,"pn":"118E2","brand":"Under Armour","style":"1359386","name":"Men's Team Legacy Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/14976_fm.jpg","isNew":false,"eco":false},{"id":6745,"pn":"33024","brand":"Columbia","style":"118518","name":"Whirlibird™ Watch Cap Beanie","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/6745_fm.jpg","isNew":false,"eco":false},{"id":6437,"pn":"30624","brand":"Columbia","style":"138826","name":"Men's PFG Terminal Tackle™ Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/6437_fm.jpg","isNew":false,"eco":false},{"id":10261,"pn":"03924","brand":"Columbia","style":"141160","name":"Men's Hart Mountain™ II Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/10261_fm.jpg","isNew":false,"eco":true},{"id":8063,"pn":"11124","brand":"Columbia","style":"141162","name":"Men's Hart Mountain™ Half-Zip Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/8063_fm.jpg","isNew":false,"eco":true},{"id":6417,"pn":"01224","brand":"Columbia","style":"147667","name":"Men's Steens Mountain™ Fleece 2.0 Full-Zip Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/6417_fm.jpg","isNew":false,"eco":true},{"id":6420,"pn":"01524","brand":"Columbia","style":"155653","name":"Ascender™ Soft Shell Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/6420_fm.jpg","isNew":false,"eco":true},{"id":10280,"pn":"05824","brand":"Columbia","style":"168220","name":"Ale Creek™ Beanie","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/10280_fm.jpg","isNew":false,"eco":false},{"id":8062,"pn":"11024","brand":"Columbia","style":"177205","name":"Men's Utilizer™ Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/8062_fm.jpg","isNew":false,"eco":false},{"id":9862,"pn":"61430","brand":"Dickies","style":"1329","name":"Men's 5-Pocket Jeans","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9862_fm.jpg","isNew":false,"eco":false},{"id":9866,"pn":"61830","brand":"Dickies","style":"1933","name":"Men's Duck Carpenter Jeans","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9866_fm.jpg","isNew":false,"eco":false},{"id":9936,"pn":"67630","brand":"Dickies","style":"1933ODD","name":"Men's Odd Sizes Duck Carpenter Jeans","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9936_fm.jpg","isNew":false,"eco":false},{"id":9940,"pn":"68030","brand":"Dickies","style":"1944","name":"Men's Lightweight Carpenter Jeans","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9940_fm.jpg","isNew":false,"eco":false},{"id":9945,"pn":"68530","brand":"Dickies","style":"1999","name":"Men's Carpenter Jeans","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9945_fm.jpg","isNew":false,"eco":false},{"id":9942,"pn":"68230","brand":"Dickies","style":"2953","name":"Men's Painter's Utility Pants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9942_fm.jpg","isNew":false,"eco":false},{"id":7725,"pn":"96534","brand":"Augusta Sportswear","style":"1106","name":"All Out Glitter Backpack","cat":"Bags","img":"https://www.ssactivewear.com/Images/Style/7725_fm.jpg","isNew":false,"eco":false},{"id":6675,"pn":"92634","brand":"Augusta Sportswear","style":"1168","name":"Unisex Alley-Oop Reversible Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/6675_fm.jpg","isNew":false,"eco":false},{"id":4964,"pn":"12634","brand":"Augusta Sportswear","style":"1202","name":"Women's Solid Racerback Tank Top","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/4964_fm.jpg","isNew":false,"eco":false},{"id":5131,"pn":"29734","brand":"Augusta Sportswear","style":"1218","name":"Women's Blash Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/5131_fm.jpg","isNew":false,"eco":false},{"id":7225,"pn":"61434","brand":"Augusta Sportswear","style":"1232","name":"Women's Dare Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/7225_fm.jpg","isNew":false,"eco":false},{"id":3397,"pn":"02185","brand":"Badger","style":"0200","name":"Unisex Arm Sleeve","cat":"Accessories","img":"https://www.ssactivewear.com/Images/Style/3397_fm.jpg","isNew":false,"eco":true},{"id":4477,"pn":"10085","brand":"Badger","style":"0300","name":"Headband","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/4477_fm.jpg","isNew":false,"eco":true},{"id":8007,"pn":"22085","brand":"Badger","style":"1000","name":"Men's FitFlex Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/8007_fm.jpg","isNew":false,"eco":true},{"id":7996,"pn":"08485","brand":"Badger","style":"1001","name":"Men's FitFlex Performance Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/7996_fm.jpg","isNew":false,"eco":true},{"id":7997,"pn":"08585","brand":"Badger","style":"1002","name":"Women's FitFlex Performance V-Neck T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/7997_fm.jpg","isNew":false,"eco":true},{"id":7998,"pn":"08785","brand":"Badger","style":"1041","name":"Women's FitFlex French Terry Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/7998_fm.jpg","isNew":false,"eco":true},{"id":7999,"pn":"08985","brand":"Badger","style":"1050","name":"Men's FitFlex French Terry Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/7999_fm.jpg","isNew":false,"eco":true},{"id":11089,"pn":"21264","brand":"Holloway","style":"221035","name":"Unisex PR Max Track Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11089_fm.jpg","isNew":false,"eco":false},{"id":11094,"pn":"21564","brand":"Holloway","style":"221036","name":"Unisex PR Max Track Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/11094_fm.jpg","isNew":false,"eco":false},{"id":11099,"pn":"21864","brand":"Holloway","style":"221037","name":"Unisex PR Max Compression Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11099_fm.jpg","isNew":false,"eco":false},{"id":11101,"pn":"22064","brand":"Holloway","style":"221038","name":"Unisex PR Max Compression Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/11101_fm.jpg","isNew":false,"eco":false},{"id":11093,"pn":"21464","brand":"Holloway","style":"221335","name":"Women's PR Max Track Racerback Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11093_fm.jpg","isNew":false,"eco":false},{"id":11100,"pn":"21964","brand":"Holloway","style":"221337","name":"Women's PR Max Compression Racerback Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11100_fm.jpg","isNew":false,"eco":false},{"id":11142,"pn":"06638","brand":"LAT","style":"2225","name":"Youth Elevated Fleece Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/11142_fm.jpg","isNew":false,"eco":true},{"id":3928,"pn":"39038","brand":"LAT","style":"2296","name":"Youth Fleece Hoodie Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/3928_fm.jpg","isNew":false,"eco":true},{"id":655,"pn":"39538","brand":"LAT","style":"2616","name":"Girls' Fine Jersey Tee","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/655_fm.jpg","isNew":false,"eco":true},{"id":9078,"pn":"03538","brand":"LAT","style":"3502","name":"Women's Relaxed Vintage Wash Tee","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/9078_fm.jpg","isNew":false,"eco":true},{"id":2569,"pn":"80738","brand":"LAT","style":"3507","name":"Women's Fine Jersey V-Neck Tee","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/2569_fm.jpg","isNew":false,"eco":true},{"id":6915,"pn":"93638","brand":"LAT","style":"3508","name":"Women's Fine Jersey Long Sleeve Tee","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/6915_fm.jpg","isNew":false,"eco":true},{"id":2567,"pn":"87238","brand":"LAT","style":"3516","name":"Women's Fine Jersey Tee","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/2567_fm.jpg","isNew":false,"eco":true},{"id":10712,"pn":"41259","brand":"Tultex","style":"190","name":"Women's Poly-Rich Racerback Tank Top","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/10712_fm.jpg","isNew":false,"eco":true},{"id":10665,"pn":"10059","brand":"Tultex","style":"1900","name":"Men's Heritage T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/10665_fm.jpg","isNew":false,"eco":false},{"id":10667,"pn":"10259","brand":"Tultex","style":"202","name":"Unisex Fine Jersey T-Shirt","cat":"T-Shirts - Core","img":"https://www.ssactivewear.com/Images/Style/10667_fm.jpg","isNew":false,"eco":true},{"id":12346,"pn":"00059","brand":"Tultex","style":"202LS","name":"Unisex Fine Jersey Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/12346_fm.jpg","isNew":false,"eco":true},{"id":10716,"pn":"41359","brand":"Tultex","style":"206","name":"Men's Fine Jersey V-Neck T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/10716_fm.jpg","isNew":false,"eco":true},{"id":10682,"pn":"20159","brand":"Tultex","style":"213","name":"Women's Fine Jersey Slim Fit T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/10682_fm.jpg","isNew":false,"eco":true},{"id":6128,"pn":"60811","brand":"Russell Athletic","style":"029HBM","name":"Unisex Dri Power® Closed Bottom Sweatpants with Pockets","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/6128_fm.jpg","isNew":false,"eco":false},{"id":12048,"pn":"32434","brand":"Russell Athletic","style":"235JMM","name":"Unisex Five Tool Full-Button Front Baseball Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/12048_fm.jpg","isNew":false,"eco":false},{"id":8897,"pn":"62034","brand":"Russell Athletic","style":"629X2M","name":"Unisex Core Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/8897_fm.jpg","isNew":false,"eco":false},{"id":8894,"pn":"62234","brand":"Russell Athletic","style":"631X2M","name":"Unisex Core Performance Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/8894_fm.jpg","isNew":false,"eco":false},{"id":6135,"pn":"61411","brand":"Russell Athletic","style":"64STTM","name":"Unisex Dri Power® CVC Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/6135_fm.jpg","isNew":false,"eco":false},{"id":6367,"pn":"90195","brand":"Richardson","style":"110","name":"R-Flex Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/6367_fm.jpg","isNew":false,"eco":false},{"id":4331,"pn":"17995","brand":"Richardson","style":"111","name":"Garment-Washed Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/4331_fm.jpg","isNew":false,"eco":false},{"id":4332,"pn":"18095","brand":"Richardson","style":"112","name":"Snapback Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/4332_fm.jpg","isNew":false,"eco":false},{"id":7614,"pn":"00195","brand":"Richardson","style":"112FP","name":"Five-Panel Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/7614_fm.jpg","isNew":false,"eco":false},{"id":16907,"pn":"41795","brand":"Richardson","style":"112FPC","name":"Five-Panel Champ Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/16907_fm.jpg","isNew":true,"eco":false},{"id":5905,"pn":"46895","brand":"Richardson","style":"112P","name":"Printed Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/5905_fm.jpg","isNew":false,"eco":false},{"id":13179,"pn":"205A7","brand":"CORE365","style":"78181","name":"Women's Origin Performance Piqué Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/13179_fm.jpg","isNew":false,"eco":false},{"id":13225,"pn":"209A7","brand":"CORE365","style":"78183","name":"Women's Techno Lite Motivate Unlined Lightweight Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/13225_fm.jpg","isNew":false,"eco":false},{"id":13294,"pn":"210A7","brand":"CORE365","style":"78184","name":"Women's Cruise Two-Layer Fleece Bonded Soft Shell Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/13294_fm.jpg","isNew":false,"eco":false},{"id":13252,"pn":"212A7","brand":"CORE365","style":"78189","name":"Women's Brisk Insulated Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/13252_fm.jpg","isNew":false,"eco":false},{"id":13274,"pn":"213A7","brand":"CORE365","style":"78190","name":"Women's Journey Fleece Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/13274_fm.jpg","isNew":false,"eco":false},{"id":13832,"pn":"671D9","brand":"Team 365","style":"TT11","name":"Men's Zone Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/13832_fm.jpg","isNew":false,"eco":false},{"id":16374,"pn":"004D9","brand":"Team 365","style":"TT115","name":"Unisex Zone Performance Reversible Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/16374_fm.jpg","isNew":true,"eco":false},{"id":16378,"pn":"005D9","brand":"Team 365","style":"TT115B","name":"Unisex Zone Performance Reversible Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/16378_fm.jpg","isNew":true,"eco":false},{"id":13871,"pn":"672D9","brand":"Team 365","style":"TT11H","name":"Men's Sonic Heather Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/13871_fm.jpg","isNew":false,"eco":false},{"id":16384,"pn":"008D9","brand":"Team 365","style":"TT11HN","name":"Men's Zone Performance Henley","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/16384_fm.jpg","isNew":true,"eco":false},{"id":2997,"pn":"21895","brand":"Flexfit","style":"110C","name":"110® Pro-Formance® Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/2997_fm.jpg","isNew":false,"eco":false},{"id":2998,"pn":"21995","brand":"Flexfit","style":"110F","name":"110® Snapback Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/2998_fm.jpg","isNew":false,"eco":false},{"id":8128,"pn":"04095","brand":"Flexfit","style":"110M","name":"110® Mesh-Back Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/8128_fm.jpg","isNew":false,"eco":false},{"id":17018,"pn":"52195","brand":"Flexfit","style":"110MNU","name":"110® NU Mesh Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/17018_fm.jpg","isNew":true,"eco":false},{"id":12370,"pn":"27995","brand":"Flexfit","style":"110R","name":"110® Recycled Mesh Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/12370_fm.jpg","isNew":false,"eco":true},{"id":3755,"pn":"40495","brand":"Flexfit","style":"180","name":"Delta® Seamless Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/3755_fm.jpg","isNew":false,"eco":false}];
+// ── SS ACTIVEWEAR FEATURED SEED DATA (home page / fast load) ──
+const SS_DATA_FEATURED = [{"id":8507,"pn":"10106","brand":"BELLA + CANVAS","style":"0990","name":"Women's FWD Fashion Bodysuit","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/8507_fm.jpg","isNew":false,"eco":true},{"id":6166,"pn":"36106","brand":"BELLA + CANVAS","style":"100B","name":"Infant Jersey One Piece","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/6166_fm.jpg","isNew":false,"eco":true},{"id":11600,"pn":"15706","brand":"BELLA + CANVAS","style":"1010","name":"Women's Micro Rib Baby Tee","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11600_fm.jpg","isNew":false,"eco":true},{"id":11552,"pn":"04706","brand":"BELLA + CANVAS","style":"1012","name":"Women's Micro Rib Spaghetti Strap Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11552_fm.jpg","isNew":false,"eco":true},{"id":11601,"pn":"15806","brand":"BELLA + CANVAS","style":"1013","name":"Women's Micro Rib Muscle Crop Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11601_fm.jpg","isNew":false,"eco":true},{"id":11553,"pn":"04006","brand":"BELLA + CANVAS","style":"1019","name":"Women's Micro Rib Racer Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11553_fm.jpg","isNew":false,"eco":true},{"id":979,"pn":"59606","brand":"BELLA + CANVAS","style":"1080","name":"Women's Baby Rib Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/979_fm.jpg","isNew":false,"eco":true},{"id":11239,"pn":"07606","brand":"BELLA + CANVAS","style":"1081","name":"Women's Micro Rib Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11239_fm.jpg","isNew":false,"eco":true},{"id":16577,"pn":"04860","brand":"Gildan","style":"18100","name":"Unisex Heavy Blend™ Pocket Sweatpants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/16577_fm.jpg","isNew":true,"eco":true},{"id":428,"pn":"23060","brand":"Gildan","style":"18200","name":"Unisex Heavy Blend™ Sweatpants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/428_fm.jpg","isNew":false,"eco":true},{"id":576,"pn":"33560","brand":"Gildan","style":"18200B","name":"Youth Heavy Blend™ Sweatpants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/576_fm.jpg","isNew":false,"eco":true},{"id":16583,"pn":"04960","brand":"Gildan","style":"18250","name":"Unisex Heavy Blend™ Joggers","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/16583_fm.jpg","isNew":true,"eco":true},{"id":1697,"pn":"21160","brand":"Gildan","style":"18400","name":"Unisex Heavy Blend™ Open-Bottom Sweatpants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/1697_fm.jpg","isNew":false,"eco":true},{"id":12450,"pn":"02560","brand":"Gildan","style":"19000","name":"Unisex Hammer™ Maxweight Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/12450_fm.jpg","isNew":false,"eco":false},{"id":12449,"pn":"02460","brand":"Gildan","style":"19500","name":"Unisex Hammer™ Maxweight Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/12449_fm.jpg","isNew":false,"eco":false},{"id":3897,"pn":"56918","brand":"Next Level","style":"1510","name":"Women's Ideal T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/3897_fm.jpg","isNew":false,"eco":true},{"id":7813,"pn":"00518","brand":"Next Level","style":"1530","name":"Women's Ideal Flow T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/7813_fm.jpg","isNew":false,"eco":false},{"id":3895,"pn":"56718","brand":"Next Level","style":"1533","name":"Women's Ideal Racerback Tank","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/3895_fm.jpg","isNew":false,"eco":true},{"id":3898,"pn":"57218","brand":"Next Level","style":"1540","name":"Women's Ideal V-Neck T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/3898_fm.jpg","isNew":false,"eco":true},{"id":10101,"pn":"02718","brand":"Next Level","style":"1580","name":"Women's Ideal Crop Top","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/10101_fm.jpg","isNew":false,"eco":true},{"id":8320,"pn":"02618","brand":"Next Level","style":"2022","name":"Unisex Mock Twist Hoodie T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/8320_fm.jpg","isNew":false,"eco":false},{"id":4854,"pn":"38518","brand":"Next Level","style":"2050","name":"Men's Mock Twist Raglan T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/4854_fm.jpg","isNew":false,"eco":false},{"id":3206,"pn":"87318","brand":"Next Level","style":"3200","name":"Unisex Cotton V-Neck T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/3206_fm.jpg","isNew":false,"eco":true},{"id":11675,"pn":"00808","brand":"Comfort Colors","style":"1466","name":"Unisex Garment-Dyed Lightweight Fleece Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/11675_fm.jpg","isNew":false,"eco":true},{"id":11676,"pn":"00908","brand":"Comfort Colors","style":"1467","name":"Unisex Garment-Dyed Lightweight Fleece Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/11676_fm.jpg","isNew":false,"eco":true},{"id":12441,"pn":"00108","brand":"Comfort Colors","style":"1467Y","name":"Youth Garment-Dyed Lightweight Fleece Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/12441_fm.jpg","isNew":false,"eco":false},{"id":11677,"pn":"01008","brand":"Comfort Colors","style":"1468","name":"Unisex Garment-Dyed Lightweight Fleece Sweat Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/11677_fm.jpg","isNew":false,"eco":true},{"id":11678,"pn":"01108","brand":"Comfort Colors","style":"1469","name":"Unisex Garment-Dyed Lightweight Fleece Sweatpants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/11678_fm.jpg","isNew":false,"eco":true},{"id":9357,"pn":"23208","brand":"Comfort Colors","style":"1545","name":"Unisex Colorblast™ Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/9357_fm.jpg","isNew":false,"eco":true},{"id":1610,"pn":"23808","brand":"Comfort Colors","style":"1566","name":"Unisex Garment-Dyed Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/1610_fm.jpg","isNew":false,"eco":true},{"id":16616,"pn":"00408","brand":"Comfort Colors","style":"1566L","name":"Women's Garment-Dyed Mid-Length Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/16616_fm.jpg","isNew":true,"eco":true},{"id":11071,"pn":"03176","brand":"Independent Trading Co.","style":"AFX24CRP","name":"Women's Lightweight Crop Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/11071_fm.jpg","isNew":false,"eco":true},{"id":7788,"pn":"26576","brand":"Independent Trading Co.","style":"AFX64CRP","name":"Women's Lightweight Crop Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/7788_fm.jpg","isNew":false,"eco":true},{"id":6533,"pn":"19976","brand":"Independent Trading Co.","style":"AFX90UN","name":"Unisex Lightweight Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/6533_fm.jpg","isNew":false,"eco":true},{"id":1616,"pn":"81076","brand":"Independent Trading Co.","style":"AFX90UNZ","name":"Unisex Lightweight Full-Zip Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/1616_fm.jpg","isNew":false,"eco":true},{"id":7790,"pn":"12576","brand":"Independent Trading Co.","style":"EXP100PFZ","name":"Men's Puffer Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/7790_fm.jpg","isNew":false,"eco":true},{"id":16177,"pn":"00876","brand":"Independent Trading Co.","style":"EXP10PANT","name":"Men's Perform Fleece Pants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/16177_fm.jpg","isNew":false,"eco":false},{"id":7791,"pn":"12276","brand":"Independent Trading Co.","style":"EXP120PFV","name":"Men's Puffer Vest","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/7791_fm.jpg","isNew":false,"eco":true},{"id":16201,"pn":"04576","brand":"Independent Trading Co.","style":"EXP15WPQ","name":"Women's Perform Quarter-Zip Pullover","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/16201_fm.jpg","isNew":false,"eco":false},{"id":1766,"pn":"07484","brand":"Champion","style":"8187","name":"Unisex Cotton Gym Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/1766_fm.jpg","isNew":false,"eco":true},{"id":1754,"pn":"06084","brand":"Champion","style":"CC8C","name":"Unisex Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/1754_fm.jpg","isNew":false,"eco":true},{"id":15630,"pn":"10784","brand":"Champion","style":"CD100D","name":"Unisex Classic Jersey Dip Dye T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/15630_fm.jpg","isNew":false,"eco":false},{"id":15640,"pn":"10884","brand":"Champion","style":"CD400D","name":"Unisex Dip Dye Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/15640_fm.jpg","isNew":false,"eco":false},{"id":8254,"pn":"00584","brand":"Champion","style":"CD450","name":"Unisex Garment-Dyed Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/8254_fm.jpg","isNew":false,"eco":true},{"id":16691,"pn":"05184","brand":"Champion","style":"CH1000","name":"Unisex Jersey T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/16691_fm.jpg","isNew":true,"eco":false},{"id":16693,"pn":"05284","brand":"Champion","style":"CH1081","name":"Youth Jersey T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/16693_fm.jpg","isNew":true,"eco":false},{"id":16694,"pn":"05384","brand":"Champion","style":"CH1751","name":"Youth Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/16694_fm.jpg","isNew":true,"eco":false},{"id":222,"pn":"11000","brand":"Hanes","style":"054X","name":"Men's EcoSmart® Jersey Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/222_fm.jpg","isNew":false,"eco":true},{"id":1965,"pn":"31000","brand":"Hanes","style":"054Y","name":"Youth EcoSmart® Jersey Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/1965_fm.jpg","isNew":false,"eco":true},{"id":4435,"pn":"34200","brand":"Hanes","style":"42TB","name":"Perfect-T Triblend T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/4435_fm.jpg","isNew":false,"eco":true},{"id":4437,"pn":"34300","brand":"Hanes","style":"42VT","name":"Women's Perfect-T Triblend V-Neck T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/4437_fm.jpg","isNew":false,"eco":true},{"id":2561,"pn":"00100","brand":"Hanes","style":"4820","name":"Unisex Cool DRI® Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/2561_fm.jpg","isNew":false,"eco":true},{"id":4441,"pn":"34700","brand":"Hanes","style":"482L","name":"Unisex Cool DRI® Long Sleeve Performance T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/4441_fm.jpg","isNew":false,"eco":true},{"id":2563,"pn":"81400","brand":"Hanes","style":"4830","name":"Women's Cool DRI® Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/2563_fm.jpg","isNew":false,"eco":true},{"id":1710,"pn":"14079","brand":"Bayside","style":"1000","name":"Unisex USA-Made Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/1710_fm.jpg","isNew":false,"eco":false},{"id":1711,"pn":"54079","brand":"Bayside","style":"1050","name":"Women's USA-Made V-Neck Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/1711_fm.jpg","isNew":false,"eco":false},{"id":387,"pn":"21779","brand":"Bayside","style":"1102","name":"Unisex USA-Made Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/387_fm.jpg","isNew":false,"eco":false},{"id":4751,"pn":"10179","brand":"Bayside","style":"1115","name":"Youth USA-Made Full-Zip Fleece Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/4751_fm.jpg","isNew":false,"eco":false},{"id":4752,"pn":"10279","brand":"Bayside","style":"1120","name":"Men's USA-Made Full-Zip Fleece Vest","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/4752_fm.jpg","isNew":false,"eco":false},{"id":4492,"pn":"10079","brand":"Bayside","style":"1130","name":"Men's USA-Made Full-Zip Fleece Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/4492_fm.jpg","isNew":false,"eco":false},{"id":173,"pn":"08079","brand":"Bayside","style":"1701","name":"Unisex USA-Made 50/50 T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/173_fm.jpg","isNew":false,"eco":false},{"id":179,"pn":"08379","brand":"Bayside","style":"1715","name":"Men's USA-Made 50/50 Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/179_fm.jpg","isNew":false,"eco":false},{"id":12614,"pn":"11653","brand":"Adidas","style":"A1005","name":"Women's Ottoman Sleeveless Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/12614_fm.jpg","isNew":false,"eco":false},{"id":16031,"pn":"13453","brand":"Adidas","style":"A1008","name":"Women's Beyond Long Sleeve Loose Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/16031_fm.jpg","isNew":true,"eco":false},{"id":16032,"pn":"13553","brand":"Adidas","style":"A1009","name":"Women's Ultimate Quilted Full-Zip Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/16032_fm.jpg","isNew":true,"eco":false},{"id":12616,"pn":"11853","brand":"Adidas","style":"A1010","name":"Women's Performance Pocket Leggings","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/12616_fm.jpg","isNew":false,"eco":false},{"id":16034,"pn":"13753","brand":"Adidas","style":"A1012","name":"Women's Go-To Quarter-Zip Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/16034_fm.jpg","isNew":true,"eco":false},{"id":16438,"pn":"15753","brand":"Adidas","style":"A1014","name":"Women's Beyond Side-Snap Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/16438_fm.jpg","isNew":true,"eco":false},{"id":16475,"pn":"18953","brand":"Adidas","style":"A1016","name":"Women's Ultimate365 Tour Twistknit Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/16475_fm.jpg","isNew":true,"eco":false},{"id":11957,"pn":"15453","brand":"Adidas","style":"A2000","name":"Men's Golf 9\" Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/11957_fm.jpg","isNew":false,"eco":false},{"id":15460,"pn":"100E2","brand":"Under Armour","style":"1240539","name":"Ozsee Sackpack Drawstring Bag","cat":"Bags","img":"https://www.ssactivewear.com/Images/Style/15460_fm.jpg","isNew":false,"eco":false},{"id":14805,"pn":"101E2","brand":"Under Armour","style":"1300123","name":"Men's Hustle Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/14805_fm.jpg","isNew":false,"eco":false},{"id":14811,"pn":"102E2","brand":"Under Armour","style":"1300261","name":"Women's Hustle Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/14811_fm.jpg","isNew":false,"eco":false},{"id":14925,"pn":"103E2","brand":"Under Armour","style":"1302159","name":"Hustle Fleece Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/14925_fm.jpg","isNew":false,"eco":false},{"id":14906,"pn":"108E2","brand":"Under Armour","style":"1305784","name":"Women's Rival Fleece Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/14906_fm.jpg","isNew":false,"eco":false},{"id":15040,"pn":"113E2","brand":"Under Armour","style":"1343149","name":"Storm Elements Beanie","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/15040_fm.jpg","isNew":false,"eco":false},{"id":16181,"pn":"212E2","brand":"Under Armour","style":"1350097","name":"All Sport Backpack","cat":"Bags","img":"https://www.ssactivewear.com/Images/Style/16181_fm.jpg","isNew":true,"eco":false},{"id":14976,"pn":"118E2","brand":"Under Armour","style":"1359386","name":"Men's Team Legacy Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/14976_fm.jpg","isNew":false,"eco":false},{"id":6745,"pn":"33024","brand":"Columbia","style":"118518","name":"Whirlibird™ Watch Cap Beanie","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/6745_fm.jpg","isNew":false,"eco":false},{"id":6437,"pn":"30624","brand":"Columbia","style":"138826","name":"Men's PFG Terminal Tackle™ Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/6437_fm.jpg","isNew":false,"eco":false},{"id":10261,"pn":"03924","brand":"Columbia","style":"141160","name":"Men's Hart Mountain™ II Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/10261_fm.jpg","isNew":false,"eco":true},{"id":8063,"pn":"11124","brand":"Columbia","style":"141162","name":"Men's Hart Mountain™ Half-Zip Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/8063_fm.jpg","isNew":false,"eco":true},{"id":6417,"pn":"01224","brand":"Columbia","style":"147667","name":"Men's Steens Mountain™ Fleece 2.0 Full-Zip Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/6417_fm.jpg","isNew":false,"eco":true},{"id":6420,"pn":"01524","brand":"Columbia","style":"155653","name":"Ascender™ Soft Shell Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/6420_fm.jpg","isNew":false,"eco":true},{"id":10280,"pn":"05824","brand":"Columbia","style":"168220","name":"Ale Creek™ Beanie","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/10280_fm.jpg","isNew":false,"eco":false},{"id":8062,"pn":"11024","brand":"Columbia","style":"177205","name":"Men's Utilizer™ Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/8062_fm.jpg","isNew":false,"eco":false},{"id":9862,"pn":"61430","brand":"Dickies","style":"1329","name":"Men's 5-Pocket Jeans","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9862_fm.jpg","isNew":false,"eco":false},{"id":9866,"pn":"61830","brand":"Dickies","style":"1933","name":"Men's Duck Carpenter Jeans","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9866_fm.jpg","isNew":false,"eco":false},{"id":9936,"pn":"67630","brand":"Dickies","style":"1933ODD","name":"Men's Odd Sizes Duck Carpenter Jeans","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9936_fm.jpg","isNew":false,"eco":false},{"id":9940,"pn":"68030","brand":"Dickies","style":"1944","name":"Men's Lightweight Carpenter Jeans","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9940_fm.jpg","isNew":false,"eco":false},{"id":9945,"pn":"68530","brand":"Dickies","style":"1999","name":"Men's Carpenter Jeans","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9945_fm.jpg","isNew":false,"eco":false},{"id":9942,"pn":"68230","brand":"Dickies","style":"2953","name":"Men's Painter's Utility Pants","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/9942_fm.jpg","isNew":false,"eco":false},{"id":7725,"pn":"96534","brand":"Augusta Sportswear","style":"1106","name":"All Out Glitter Backpack","cat":"Bags","img":"https://www.ssactivewear.com/Images/Style/7725_fm.jpg","isNew":false,"eco":false},{"id":6675,"pn":"92634","brand":"Augusta Sportswear","style":"1168","name":"Unisex Alley-Oop Reversible Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/6675_fm.jpg","isNew":false,"eco":false},{"id":4964,"pn":"12634","brand":"Augusta Sportswear","style":"1202","name":"Women's Solid Racerback Tank Top","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/4964_fm.jpg","isNew":false,"eco":false},{"id":5131,"pn":"29734","brand":"Augusta Sportswear","style":"1218","name":"Women's Blash Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/5131_fm.jpg","isNew":false,"eco":false},{"id":7225,"pn":"61434","brand":"Augusta Sportswear","style":"1232","name":"Women's Dare Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/7225_fm.jpg","isNew":false,"eco":false},{"id":3397,"pn":"02185","brand":"Badger","style":"0200","name":"Unisex Arm Sleeve","cat":"Accessories","img":"https://www.ssactivewear.com/Images/Style/3397_fm.jpg","isNew":false,"eco":true},{"id":4477,"pn":"10085","brand":"Badger","style":"0300","name":"Headband","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/4477_fm.jpg","isNew":false,"eco":true},{"id":8007,"pn":"22085","brand":"Badger","style":"1000","name":"Men's FitFlex Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/8007_fm.jpg","isNew":false,"eco":true},{"id":7996,"pn":"08485","brand":"Badger","style":"1001","name":"Men's FitFlex Performance Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/7996_fm.jpg","isNew":false,"eco":true},{"id":7997,"pn":"08585","brand":"Badger","style":"1002","name":"Women's FitFlex Performance V-Neck T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/7997_fm.jpg","isNew":false,"eco":true},{"id":7998,"pn":"08785","brand":"Badger","style":"1041","name":"Women's FitFlex French Terry Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/7998_fm.jpg","isNew":false,"eco":true},{"id":7999,"pn":"08985","brand":"Badger","style":"1050","name":"Men's FitFlex French Terry Hooded Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/7999_fm.jpg","isNew":false,"eco":true},{"id":11089,"pn":"21264","brand":"Holloway","style":"221035","name":"Unisex PR Max Track Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11089_fm.jpg","isNew":false,"eco":false},{"id":11094,"pn":"21564","brand":"Holloway","style":"221036","name":"Unisex PR Max Track Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/11094_fm.jpg","isNew":false,"eco":false},{"id":11099,"pn":"21864","brand":"Holloway","style":"221037","name":"Unisex PR Max Compression Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11099_fm.jpg","isNew":false,"eco":false},{"id":11101,"pn":"22064","brand":"Holloway","style":"221038","name":"Unisex PR Max Compression Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/11101_fm.jpg","isNew":false,"eco":false},{"id":11093,"pn":"21464","brand":"Holloway","style":"221335","name":"Women's PR Max Track Racerback Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11093_fm.jpg","isNew":false,"eco":false},{"id":11100,"pn":"21964","brand":"Holloway","style":"221337","name":"Women's PR Max Compression Racerback Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/11100_fm.jpg","isNew":false,"eco":false},{"id":11142,"pn":"06638","brand":"LAT","style":"2225","name":"Youth Elevated Fleece Crewneck Sweatshirt","cat":"Fleece - Premium - Crew","img":"https://www.ssactivewear.com/Images/Style/11142_fm.jpg","isNew":false,"eco":true},{"id":3928,"pn":"39038","brand":"LAT","style":"2296","name":"Youth Fleece Hoodie Sweatshirt","cat":"Fleece - Premium - Hood","img":"https://www.ssactivewear.com/Images/Style/3928_fm.jpg","isNew":false,"eco":true},{"id":655,"pn":"39538","brand":"LAT","style":"2616","name":"Girls' Fine Jersey Tee","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/655_fm.jpg","isNew":false,"eco":true},{"id":9078,"pn":"03538","brand":"LAT","style":"3502","name":"Women's Relaxed Vintage Wash Tee","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/9078_fm.jpg","isNew":false,"eco":true},{"id":2569,"pn":"80738","brand":"LAT","style":"3507","name":"Women's Fine Jersey V-Neck Tee","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/2569_fm.jpg","isNew":false,"eco":true},{"id":6915,"pn":"93638","brand":"LAT","style":"3508","name":"Women's Fine Jersey Long Sleeve Tee","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/6915_fm.jpg","isNew":false,"eco":true},{"id":2567,"pn":"87238","brand":"LAT","style":"3516","name":"Women's Fine Jersey Tee","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/2567_fm.jpg","isNew":false,"eco":true},{"id":10712,"pn":"41259","brand":"Tultex","style":"190","name":"Women's Poly-Rich Racerback Tank Top","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/10712_fm.jpg","isNew":false,"eco":true},{"id":10665,"pn":"10059","brand":"Tultex","style":"1900","name":"Men's Heritage T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/10665_fm.jpg","isNew":false,"eco":false},{"id":10667,"pn":"10259","brand":"Tultex","style":"202","name":"Unisex Fine Jersey T-Shirt","cat":"T-Shirts - Core","img":"https://www.ssactivewear.com/Images/Style/10667_fm.jpg","isNew":false,"eco":true},{"id":12346,"pn":"00059","brand":"Tultex","style":"202LS","name":"Unisex Fine Jersey Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/12346_fm.jpg","isNew":false,"eco":true},{"id":10716,"pn":"41359","brand":"Tultex","style":"206","name":"Men's Fine Jersey V-Neck T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/10716_fm.jpg","isNew":false,"eco":true},{"id":10682,"pn":"20159","brand":"Tultex","style":"213","name":"Women's Fine Jersey Slim Fit T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/10682_fm.jpg","isNew":false,"eco":true},{"id":6128,"pn":"60811","brand":"Russell Athletic","style":"029HBM","name":"Unisex Dri Power® Closed Bottom Sweatpants with Pockets","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/6128_fm.jpg","isNew":false,"eco":false},{"id":12048,"pn":"32434","brand":"Russell Athletic","style":"235JMM","name":"Unisex Five Tool Full-Button Front Baseball Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/12048_fm.jpg","isNew":false,"eco":false},{"id":8897,"pn":"62034","brand":"Russell Athletic","style":"629X2M","name":"Unisex Core Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/8897_fm.jpg","isNew":false,"eco":false},{"id":8894,"pn":"62234","brand":"Russell Athletic","style":"631X2M","name":"Unisex Core Performance Long Sleeve T-Shirt","cat":"T-Shirts - Long Sleeve","img":"https://www.ssactivewear.com/Images/Style/8894_fm.jpg","isNew":false,"eco":false},{"id":6135,"pn":"61411","brand":"Russell Athletic","style":"64STTM","name":"Unisex Dri Power® CVC Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/6135_fm.jpg","isNew":false,"eco":false},{"id":6367,"pn":"90195","brand":"Richardson","style":"110","name":"R-Flex Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/6367_fm.jpg","isNew":false,"eco":false},{"id":4331,"pn":"17995","brand":"Richardson","style":"111","name":"Garment-Washed Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/4331_fm.jpg","isNew":false,"eco":false},{"id":4332,"pn":"18095","brand":"Richardson","style":"112","name":"Snapback Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/4332_fm.jpg","isNew":false,"eco":false},{"id":7614,"pn":"00195","brand":"Richardson","style":"112FP","name":"Five-Panel Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/7614_fm.jpg","isNew":false,"eco":false},{"id":16907,"pn":"41795","brand":"Richardson","style":"112FPC","name":"Five-Panel Champ Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/16907_fm.jpg","isNew":true,"eco":false},{"id":5905,"pn":"46895","brand":"Richardson","style":"112P","name":"Printed Trucker Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/5905_fm.jpg","isNew":false,"eco":false},{"id":13179,"pn":"205A7","brand":"CORE365","style":"78181","name":"Women's Origin Performance Piqué Polo","cat":"Polos","img":"https://www.ssactivewear.com/Images/Style/13179_fm.jpg","isNew":false,"eco":false},{"id":13225,"pn":"209A7","brand":"CORE365","style":"78183","name":"Women's Techno Lite Motivate Unlined Lightweight Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/13225_fm.jpg","isNew":false,"eco":false},{"id":13294,"pn":"210A7","brand":"CORE365","style":"78184","name":"Women's Cruise Two-Layer Fleece Bonded Soft Shell Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/13294_fm.jpg","isNew":false,"eco":false},{"id":13252,"pn":"212A7","brand":"CORE365","style":"78189","name":"Women's Brisk Insulated Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/13252_fm.jpg","isNew":false,"eco":false},{"id":13274,"pn":"213A7","brand":"CORE365","style":"78190","name":"Women's Journey Fleece Jacket","cat":"Outerwear","img":"https://www.ssactivewear.com/Images/Style/13274_fm.jpg","isNew":false,"eco":false},{"id":13832,"pn":"671D9","brand":"Team 365","style":"TT11","name":"Men's Zone Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/13832_fm.jpg","isNew":false,"eco":false},{"id":16374,"pn":"004D9","brand":"Team 365","style":"TT115","name":"Unisex Zone Performance Reversible Jersey","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/16374_fm.jpg","isNew":true,"eco":false},{"id":16378,"pn":"005D9","brand":"Team 365","style":"TT115B","name":"Unisex Zone Performance Reversible Shorts","cat":"Bottoms","img":"https://www.ssactivewear.com/Images/Style/16378_fm.jpg","isNew":true,"eco":false},{"id":13871,"pn":"672D9","brand":"Team 365","style":"TT11H","name":"Men's Sonic Heather Performance T-Shirt","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/13871_fm.jpg","isNew":false,"eco":false},{"id":16384,"pn":"008D9","brand":"Team 365","style":"TT11HN","name":"Men's Zone Performance Henley","cat":"T-Shirts - Premium","img":"https://www.ssactivewear.com/Images/Style/16384_fm.jpg","isNew":true,"eco":false},{"id":2997,"pn":"21895","brand":"Flexfit","style":"110C","name":"110® Pro-Formance® Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/2997_fm.jpg","isNew":false,"eco":false},{"id":2998,"pn":"21995","brand":"Flexfit","style":"110F","name":"110® Snapback Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/2998_fm.jpg","isNew":false,"eco":false},{"id":8128,"pn":"04095","brand":"Flexfit","style":"110M","name":"110® Mesh-Back Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/8128_fm.jpg","isNew":false,"eco":false},{"id":17018,"pn":"52195","brand":"Flexfit","style":"110MNU","name":"110® NU Mesh Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/17018_fm.jpg","isNew":true,"eco":false},{"id":12370,"pn":"27995","brand":"Flexfit","style":"110R","name":"110® Recycled Mesh Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/12370_fm.jpg","isNew":false,"eco":true},{"id":3755,"pn":"40495","brand":"Flexfit","style":"180","name":"Delta® Seamless Cap","cat":"Headwear","img":"https://www.ssactivewear.com/Images/Style/3755_fm.jpg","isNew":false,"eco":false}];
 
 // Normalise SS data into shape that rest of site expects
 const SIZES_BY_CAT = {
@@ -2213,7 +2312,8 @@ function buildImgs(styleID) {
   return [`https://www.ssactivewear.com/Images/Style/${styleID}_fm.jpg`];
 }
 
-const P = SS_DATA.map(d => {
+// P starts with featured seed; replaced with full 5,715 when shop loads
+function mapRawToProduct(d) {
   const colors = (BRAND_COLORS[d.brand] || COLORS_DEFAULT).map(c => ({n:c.n, h:c.h, c:c.c}));
   const sizes = SIZES_BY_CAT[d.cat] || SIZES_BY_CAT['default'];
   const basePrice = parseFloat((12 + Math.abs(d.id % 63) * 0.87).toFixed(2));
@@ -2240,13 +2340,71 @@ const P = SS_DATA.map(d => {
     eco: d.eco,
     isNew: d.isNew,
   };
-});
+}
+let P = SS_DATA_FEATURED.map(mapRawToProduct);
 
 // ── FILTER STATE ──
 let activeCats = new Set();
 let activeBrands = new Set();
 let activeGenders = new Set();
+let activeSleeves = new Set();
+let activeStyles = new Set();
 let filteredP = [...P];
+let shopPage = 1;
+const SHOP_PER_PAGE = 24;
+
+// ── FULL CATALOG ASYNC LOADER ──
+let catalogLoaded = false;
+let catalogLoading = false;
+
+async function loadFullCatalog() {
+  if (catalogLoaded || catalogLoading) return;
+  catalogLoading = true;
+
+  // Show spinner in shop grid while loading
+  const grid = document.getElementById('shop-grid');
+  const cnt = document.getElementById('shop-count-text');
+  if (grid) grid.innerHTML = `
+    <div style="grid-column:1/-1;padding:80px 20px;text-align:center;">
+      <div style="width:40px;height:40px;border:3px solid var(--g200);border-top-color:var(--blue);
+           border-radius:50%;animation:catalogSpin .7s linear infinite;margin:0 auto 16px;"></div>
+      <p style="font-size:14px;color:var(--g500);">Loading 5,715 styles…</p>
+    </div>`;
+  if (cnt) cnt.textContent = 'Loading…';
+
+  try {
+    const resp = await fetch('ss_styles.json');
+    const text = await resp.text();
+    const raw = JSON.parse(text.charCodeAt(0) === 0xFEFF ? text.slice(1) : text);
+
+    // Map JSON fields → app's internal shape
+    const mapped = raw.map(d => ({
+      id:    d.styleID,
+      pn:    d.partNumber  || '',
+      brand: d.brandName   || '',
+      style: d.styleName   || '',
+      name:  d.title       || '',
+      cat:   d.baseCategory|| '',
+      isNew: !!d.newStyle,
+      eco:   !!d.sustainableStyle,
+    }));
+
+    P = mapped.map(mapRawToProduct);
+    filteredP = [...P];
+    catalogLoaded = true;
+    catalogLoading = false;
+    buildFilters();
+    applyFilters();
+
+  } catch(e) {
+    catalogLoading = false;
+    console.warn('Catalog load failed, using featured seed:', e);
+    // Graceful fallback to seed data already in P
+    filteredP = [...P];
+    buildFilters();
+    applyFilters();
+  }
+}
 
 function getGender(name){
   const n = name.toLowerCase();
@@ -2314,29 +2472,149 @@ function clearFilter(type){
   } else if(type==='gender'){
     activeGenders.clear();
     document.querySelectorAll('#filter-genders input').forEach(i=>i.checked=false);
+  } else if(type==='sleeve'){
+    activeSleeves.clear();
+    document.querySelectorAll('.flt-sleeve').forEach(i=>i.checked=false);
+  } else if(type==='style'){
+    activeStyles.clear();
+    document.querySelectorAll('.flt-style').forEach(i=>i.checked=false);
   }
   applyFilters();
 }
 function resetFilters(){
   activeCats.clear(); activeBrands.clear(); activeGenders.clear();
-  document.querySelectorAll('#filter-cats input,#filter-brands input,#filter-genders input,#flt-new,#flt-eco').forEach(i=>i.checked=false);
+  activeSleeves.clear(); activeStyles.clear();
+  document.querySelectorAll('#filter-cats input,#filter-brands input,#filter-genders input,#flt-new,#flt-eco,.flt-sleeve,.flt-style').forEach(i=>i.checked=false);
   document.getElementById('shop-search').value='';
   applyFilters();
+}
+function getSleeveType(name){
+  const n = name.toLowerCase();
+  if(n.includes('long sleeve') || n.includes('long-sleeve')) return 'Long Sleeve';
+  if(n.includes('tank') || n.includes('racerback') || n.includes('spaghetti') || n.includes('sleeveless')) return 'Sleeveless';
+  return 'Short Sleeve';
+}
+function getStyleType(name, cat){
+  const n = name.toLowerCase();
+  const c = cat.toLowerCase();
+  if(c.includes('polo')) return 'Polo';
+  if(n.includes('hoodie') || n.includes('hooded') || n.includes('zip')) return 'Hoodie';
+  if(c.includes('crew') || n.includes('crewneck')) return 'Crewneck';
+  if(n.includes('jacket') || n.includes('vest') || c.includes('outerwear')) return 'Jacket';
+  if(n.includes('short') || n.includes('shorts')) return 'Shorts';
+  return '';
 }
 function applyFilters(){
   const q = (document.getElementById('shop-search')?.value||'').toLowerCase();
   const onlyNew = document.getElementById('flt-new')?.checked;
   const onlyEco = document.getElementById('flt-eco')?.checked;
+  // Read sleeve & style checkboxes
+  activeSleeves.clear();
+  document.querySelectorAll('.flt-sleeve:checked').forEach(cb=>activeSleeves.add(cb.value));
+  activeStyles.clear();
+  document.querySelectorAll('.flt-style:checked').forEach(cb=>activeStyles.add(cb.value));
+
   filteredP = P.filter(p=>{
     if(activeCats.size && !activeCats.has(p.cat)) return false;
     if(activeBrands.size && !activeBrands.has(p.brand)) return false;
     if(activeGenders.size && !activeGenders.has(getGender(p.name))) return false;
+    if(activeSleeves.size && !activeSleeves.has(getSleeveType(p.name))) return false;
+    if(activeStyles.size && !activeStyles.has(getStyleType(p.name, p.cat))) return false;
     if(onlyNew && !p.isNew) return false;
     if(onlyEco && !p.eco) return false;
     if(q && !p.name.toLowerCase().includes(q) && !p.brand.toLowerCase().includes(q) && !p.style.toLowerCase().includes(q)) return false;
     return true;
   });
+
+  // Sort
+  const sortVal = document.getElementById('shop-sort-select')?.value || 'best';
+  if(sortVal === 'newest') filteredP = [...filteredP].filter(p=>p.isNew).concat(filteredP.filter(p=>!p.isNew));
+  else if(sortVal === 'price-asc') filteredP = [...filteredP].sort((a,b)=>a.price-b.price);
+  else if(sortVal === 'price-desc') filteredP = [...filteredP].sort((a,b)=>b.price-a.price);
+
+  shopPage = 1;
   renderShopGrid();
+  renderActiveFilterTags();
+}
+
+function renderActiveFilterTags(){
+  const bar = document.getElementById('active-filters-bar');
+  if(!bar) return;
+  const tags = [];
+  activeCats.forEach(v=>tags.push({label:'Category: '+v.replace('T-Shirts - ','').replace('Fleece - Premium - ',''), type:'cat', value:v}));
+  activeBrands.forEach(v=>tags.push({label:'Brand: '+v, type:'brand', value:v}));
+  activeGenders.forEach(v=>tags.push({label:'Gender: '+v, type:'gender', value:v}));
+  activeSleeves.forEach(v=>tags.push({label:v, type:'sleeve', value:v}));
+  activeStyles.forEach(v=>tags.push({label:'Style: '+v, type:'style', value:v}));
+  if(document.getElementById('flt-new')?.checked) tags.push({label:'New Arrivals', type:'new'});
+  if(document.getElementById('flt-eco')?.checked) tags.push({label:'🌿 Eco', type:'eco'});
+  const q = document.getElementById('shop-search')?.value;
+  if(q) tags.push({label:'Search: "'+q+'"', type:'q'});
+
+  if(!tags.length){ bar.innerHTML=''; return; }
+  bar.innerHTML = tags.map(t=>`<span class="filter-tag" onclick="removeFilterTag('${t.type}','${(t.value||'').replace(/'/g,"\\'")}')">
+    ${t.label} <span class="ftx">×</span>
+  </span>`).join('') + `<span class="filter-clear-all" onclick="resetFilters()">Clear all</span>`;
+}
+
+function removeFilterTag(type, value){
+  if(type==='cat'){ activeCats.delete(value); document.querySelector(`#filter-cats input[id^="cat-"]`)&&document.querySelectorAll('#filter-cats input').forEach(i=>{if(i.nextElementSibling?.textContent?.trim()===value) i.checked=false;}); }
+  else if(type==='brand'){ activeBrands.delete(value); document.querySelectorAll('#filter-brands input').forEach(i=>{if(i.nextElementSibling?.textContent?.trim()===value) i.checked=false;}); }
+  else if(type==='gender'){ activeGenders.delete(value); document.querySelectorAll('#filter-genders input').forEach(i=>{if(i.nextElementSibling?.textContent?.trim()===value) i.checked=false;}); }
+  else if(type==='sleeve'){ activeSleeves.delete(value); document.querySelectorAll('.flt-sleeve').forEach(i=>{if(i.value===value) i.checked=false;}); }
+  else if(type==='style'){ activeStyles.delete(value); document.querySelectorAll('.flt-style').forEach(i=>{if(i.value===value) i.checked=false;}); }
+  else if(type==='new'){ document.getElementById('flt-new').checked=false; }
+  else if(type==='eco'){ document.getElementById('flt-eco').checked=false; }
+  else if(type==='q'){ document.getElementById('shop-search').value=''; }
+  applyFilters();
+}
+
+function renderShopGrid(){
+  const g=document.getElementById('shop-grid');
+  if(!g)return;
+  const list = filteredP.length ? filteredP : (activeCats.size||activeBrands.size||activeGenders.size||activeSleeves.size||activeStyles.size ? [] : P);
+  const totalPages = Math.ceil(list.length / SHOP_PER_PAGE);
+  const pageList = list.slice((shopPage-1)*SHOP_PER_PAGE, shopPage*SHOP_PER_PAGE);
+
+  g.innerHTML = pageList.length
+    ? pageList.map(p=>pCard(p)).join('')
+    : `<div style="grid-column:1/-1;padding:60px;text-align:center;color:var(--g400);">
+        <div style="font-size:40px;margin-bottom:14px;">🔍</div>
+        <p style="font-size:16px;font-weight:600;color:var(--navy);">No products found</p>
+        <p style="margin-top:6px;font-size:14px;">Try adjusting your filters or clearing the search.</p>
+        <button class="btn btn-outline btn-sm" onclick="resetFilters()" style="margin-top:18px;">Clear Filters</button>
+      </div>`;
+
+  const cnt=document.getElementById('shop-count-text');
+  if(cnt) cnt.innerHTML=`${list.length} products`;
+
+  // Pagination
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages){
+  const el = document.getElementById('shop-pagination');
+  if(!el || totalPages <= 1){ if(el) el.innerHTML=''; return; }
+  let html = `<button class="pg-btn" onclick="goPage(${shopPage-1})" ${shopPage===1?'disabled':''}>‹</button>`;
+  const range = [];
+  for(let i=1;i<=totalPages;i++){
+    if(i===1||i===totalPages||Math.abs(i-shopPage)<=1) range.push(i);
+    else if(Math.abs(i-shopPage)===2) range.push('…');
+  }
+  // Dedupe ellipses
+  const deduped = range.filter((v,i,a)=>v!=='…'||a[i-1]!=='…');
+  deduped.forEach(v=>{
+    if(v==='…') html+=`<span class="pg-ellipsis">…</span>`;
+    else html+=`<button class="pg-btn ${v===shopPage?'active':''}" onclick="goPage(${v})">${v}</button>`;
+  });
+  html+=`<button class="pg-btn" onclick="goPage(${shopPage+1})" ${shopPage===totalPages?'disabled':''}>›</button>`;
+  el.innerHTML=html;
+}
+
+function goPage(p){
+  shopPage=p;
+  renderShopGrid();
+  document.querySelector('#page-shop .shop-layout').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 let cart = [];
@@ -2352,7 +2630,7 @@ function nav(page){
   window.scrollTo({top:0,behavior:'smooth'});
   if(page==='cart')renderCart();
   if(page==='checkout')renderCheckout();
-  if(page==='shop')renderShopGrid();
+  if(page==='shop'){ loadFullCatalog(); renderShopGrid(); }
   if(page==='home')renderHomeGrid();
   if(page==='collections')renderCollections();
   // Hide main header on customize page for full-screen studio feel
@@ -2392,21 +2670,6 @@ function pCard(p){
 function renderHomeGrid(){
   const g=document.getElementById('home-grid');
   if(g) g.innerHTML=P.filter(p=>p.isNew||p.eco).slice(0,8).map(p=>pCard(p)).join('');
-}
-function renderShopGrid(){
-  const g=document.getElementById('shop-grid');
-  if(!g)return;
-  const list = filteredP.length ? filteredP : P;
-  g.innerHTML = list.length
-    ? list.map(p=>pCard(p)).join('')
-    : `<div style="grid-column:1/-1;padding:60px;text-align:center;color:var(--g400);">
-        <div style="font-size:40px;margin-bottom:14px;">🔍</div>
-        <p style="font-size:16px;font-weight:600;color:var(--navy);">No products found</p>
-        <p style="margin-top:6px;font-size:14px;">Try adjusting your filters or clearing the search.</p>
-        <button class="btn btn-outline btn-sm" onclick="resetFilters()" style="margin-top:18px;">Clear Filters</button>
-      </div>`;
-  const cnt=document.querySelector('.shop-toolbar-count');
-  if(cnt) cnt.innerHTML=`Showing <strong>${list.length} products</strong>`;
 }
 
 // ── COLLECTIONS ──
@@ -2516,8 +2779,8 @@ function colTab(el, panel){
 
 function navToBrand(brand){
   // Clear all filters, set brand, go to shop
-  activeCats.clear(); activeBrands.clear();
-  document.querySelectorAll('#filter-cats input,#filter-brands input,#flt-new,#flt-eco').forEach(i=>i.checked=false);
+  activeCats.clear(); activeBrands.clear(); activeGenders.clear(); activeSleeves.clear(); activeStyles.clear();
+  document.querySelectorAll('#filter-cats input,#filter-brands input,#filter-genders input,#flt-new,#flt-eco,.flt-sleeve,.flt-style').forEach(i=>i.checked=false);
   document.getElementById('shop-search').value = '';
   activeBrands.add(brand);
   // Tick the right checkbox after shop renders
@@ -2536,8 +2799,8 @@ function navToBrand(brand){
 }
 
 function navToCat(cat){
-  activeCats.clear(); activeBrands.clear();
-  document.querySelectorAll('#filter-cats input,#filter-brands input,#flt-new,#flt-eco').forEach(i=>i.checked=false);
+  activeCats.clear(); activeBrands.clear(); activeGenders.clear(); activeSleeves.clear(); activeStyles.clear();
+  document.querySelectorAll('#filter-cats input,#filter-brands input,#filter-genders input,#flt-new,#flt-eco,.flt-sleeve,.flt-style').forEach(i=>i.checked=false);
   document.getElementById('shop-search').value = '';
   activeCats.add(cat);
   nav('shop');
@@ -2594,9 +2857,15 @@ function renderPD(){
   const midIdx = Math.min(2, p.sizes.length-1);
   document.getElementById('pd-sizes').innerHTML=p.sizes.map((s,i)=>`<div class="sz-chip ${i===midIdx?'on':''}" onclick="selSz(this,'${s}')">${s}</div>`).join('');
   document.getElementById('pd-sz-lbl').textContent='— '+(p.sizes[midIdx]||p.sizes[0]);
-  // Related
+  // Related — same brand, excluding current
   const rel=document.getElementById('related-grid');
-  if(rel){const others=P.filter(x=>x.id!==p.id).slice(0,4);rel.innerHTML=others.map(x=>pCard(x)).join('');}
+  if(rel){const others=P.filter(x=>x.id!==p.id&&x.brand===p.brand).slice(0,4).concat(P.filter(x=>x.id!==p.id&&x.brand!==p.brand).slice(0,4-Math.min(4,P.filter(x=>x.id!==p.id&&x.brand===p.brand).length)));rel.innerHTML=others.slice(0,4).map(x=>pCard(x)).join('');}
+
+  // Inventory grid
+  renderInvGrid(p);
+
+  // Companion & Comparable
+  renderCompanion(p);
 }
 function switchImg(src,el){
   document.getElementById('pd-main-img').src=src;
@@ -2641,6 +2910,79 @@ function selSz(el,sz){
   document.getElementById('pd-sz-lbl').textContent='— '+sz;
 }
 function chQty(d){const i=document.getElementById('pd-qty');i.value=Math.max(1,+i.value+d);}
+
+// ── INVENTORY GRID ──
+function renderInvGrid(p){
+  const el = document.getElementById('pd-inv-section');
+  if(!el) return;
+  const sizes = p.sizes;
+  // Simulate case qty and inventory (deterministic from product id)
+  const caseQty = sizes.map((s,i) => {
+    if(s === 'One Size') return 72;
+    if(['4XL','5XL'].includes(s)) return 12;
+    if(s === '3XL') return 24;
+    if(s === '2XL') return 36;
+    return 72;
+  });
+  const inv = sizes.map((s,i) => {
+    const seed = (p.id * (i+1)) % 7;
+    if(seed === 0) return 'Out of Stock';
+    if(seed === 1) return (p.id % 50 + 10)+'';
+    return '>1,000';
+  });
+
+  el.innerHTML = `<div class="inv-label">Inventory by Size</div>
+  <table class="inv-table">
+    <thead>
+      <tr>
+        <th></th>
+        ${sizes.map(s=>`<th>${s}</th>`).join('')}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Case Qty</td>
+        ${caseQty.map(q=>`<td>${q}</td>`).join('')}
+      </tr>
+      <tr>
+        <td>Inventory</td>
+        ${inv.map(v=>{
+          const cls = v==='Out of Stock' ? 'inv-out' : v.startsWith('>') ? 'inv-available' : (parseInt(v)<100 ? 'inv-low' : 'inv-available');
+          return `<td class="${cls}">${v}</td>`;
+        }).join('')}
+      </tr>
+    </tbody>
+  </table>`;
+}
+
+// ── COMPANION & COMPARABLE STYLES ──
+function renderCompanion(p){
+  const compEl = document.getElementById('pd-comparable-grid');
+  const companionEl = document.getElementById('pd-companion-grid');
+  if(!compEl || !companionEl) return;
+
+  // Comparable: same category, different brand
+  const comparable = P.filter(x => x.id !== p.id && x.cat === p.cat && x.brand !== p.brand).slice(0, 5);
+  if(comparable.length){
+    compEl.innerHTML = `<div class="companion-grid">${comparable.map(x=>`
+      <div class="companion-card" onclick="openProd(${x.id})">
+        <div class="comp-thumb"><img src="${x.imgs[0]}" alt="${x.name}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&auto=format&fit=crop'"></div>
+        <div class="comp-style">${x.style}</div>
+        <div class="comp-name">${x.brand}<br>${x.name.split(' ').slice(0,4).join(' ')}</div>
+      </div>`).join('')}</div>`;
+  } else {
+    compEl.innerHTML = `<p class="comparable-empty">No comparable styles found in this category.</p>`;
+  }
+
+  // Companion: same brand, any category
+  const companion = P.filter(x => x.id !== p.id && x.brand === p.brand).slice(0, 10);
+  companionEl.innerHTML = companion.map(x=>`
+    <div class="companion-card" onclick="openProd(${x.id})">
+      <div class="comp-thumb"><img src="${x.imgs[0]}" alt="${x.name}" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&auto=format&fit=crop'"></div>
+      <div class="comp-style">${x.style}</div>
+      <div class="comp-name">${x.name.split(' ').slice(0,4).join(' ')}</div>
+    </div>`).join('');
+}
 
 // ── CART ──
 function addToCart(){
